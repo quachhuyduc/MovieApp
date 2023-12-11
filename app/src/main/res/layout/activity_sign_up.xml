@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFF"
+    android:padding="26sp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="195dp"
+            android:layout_height="wrap_content"
+            android:text="Join us to start Watch Movies"
+            android:textColor="@color/black"
+            android:textSize="28.6dp"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="117dp"
+            app:cardCornerRadius="19.5sp">
+
+            <ImageView
+
+                android:layout_width="32.5sp"
+                android:layout_height="32.5sp"
+                android:scaleType="fitXY"
+                android:src="@drawable/_0" />
+        </androidx.cardview.widget.CardView>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:textSize="25dp"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Discover your movies"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:textSize="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="19.5sp"
+            android:text="Create Account"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <EditText
+            android:textSize="15dp"
+            android:id="@+id/edtName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="19.5sp"
+            android:background="@drawable/edt"
+            android:hint="Name"
+            android:paddingLeft="13dp" />
+
+        <EditText
+            android:textSize="15dp"
+            android:id="@+id/edtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15.6dp"
+            android:background="@drawable/edt"
+            android:hint="Email"
+            android:paddingLeft="13dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15.6dp"
+            app:endIconMode="password_toggle"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPassword"
+                android:textSize="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edt"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:paddingLeft="13dp"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15.6dp"
+            app:endIconMode="password_toggle"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPhoneNumber"
+                android:textSize="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edt"
+                android:hint="Phone Number"
+                android:inputType="numberPassword"
+                android:paddingLeft="13dp"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="13dp">
+
+            <RadioButton
+                android:textSize="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/selector_checkbox2"
+                android:text="I agree with the Teams Condition  Privacy Policy"
+                android:textColor="@color/black" />
+
+            <RadioButton
+                android:textSize="15dp"
+                android:id="@+id/cbSaveLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6.5dp"
+                android:button="@drawable/selector_checkbox2"
+                android:text="New Account" />
+
+        </RadioGroup>
+
+        <Button
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:id="@+id/btnJoinUs"
+            android:layout_width="351dp"
+            android:layout_height="39dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_btnlogin"
+            android:text="Join us"
+            android:textColor="@color/white" />
+
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <TextView
+                android:textSize="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="19.5dp"
+                android:text="Do have already account ?"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:textSize="25dp"
+                android:id="@+id/tvLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2.6dp"
+                android:layout_marginTop="19.5dp"
+                android:text="Login"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
