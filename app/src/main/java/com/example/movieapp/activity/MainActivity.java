@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final int MY_REQUEST_CODE = 10;
    final private EditProfileFragment editProfileFragment = new EditProfileFragment();
 
 
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == Constants.MY_REQUEST_CODE){
+        if(requestCode == MY_REQUEST_CODE){
             if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 openGallery();
             }else{

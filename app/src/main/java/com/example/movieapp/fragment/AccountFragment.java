@@ -96,6 +96,8 @@ public class AccountFragment extends Fragment {
         });
 
     }
+
+    //  <!-- TODO: Update Name bị crash thoát ra vào lại đã update rồi  -->
     public void showUserInformation(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null){

@@ -93,7 +93,7 @@ public class WatchListFragment extends Fragment {
     }
 
 
-
+    //  <!-- TODO: watchListFragment cant show list wishList -->
     private void initsearch(View view) {
         rcv_wishList = view.findViewById(R.id.rcv_wishList);
         rcv_wishList.setHasFixedSize(true);

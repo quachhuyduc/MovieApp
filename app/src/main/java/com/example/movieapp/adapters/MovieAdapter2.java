@@ -96,7 +96,7 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
                 }
             });
 
-
+        //  <!-- TODO: img_wishlist cant get position -->
 
         holder.img_wishListHome.setOnClickListener(new View.OnClickListener() {
                 @Override
