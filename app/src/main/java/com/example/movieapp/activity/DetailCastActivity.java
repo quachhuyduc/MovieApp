@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
 import com.example.movieapp.adapters.ImagesCastAdapter;
 import com.example.movieapp.adapters.KnownForAdapter;
-import com.example.movieapp.adapters.OnMovieListener;
+import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.api.MovieApi;
 import com.example.movieapp.api.RetrofitClient;
 import com.example.movieapp.models.Cast;
@@ -94,6 +94,7 @@ public class DetailCastActivity extends AppCompatActivity {
 
                             mProfiles    = response.body().getProfiles();
                             imagesCastAdapter.setDataImages(mProfiles);
+
                         }
                     }
                 }
@@ -134,9 +135,9 @@ public class DetailCastActivity extends AppCompatActivity {
     private void initView() {
 
         RecyclerView recyclerView = findViewById(R.id.rcv_cast_backdrop_detail);
-        //   LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+
         recyclerView.setHasFixedSize(true);
-        //    recyclerView.setLayoutManager(layoutManager);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         imagesCastAdapter = new ImagesCastAdapter(getBaseContext());

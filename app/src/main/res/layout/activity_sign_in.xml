@@ -41,6 +41,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/nameUserSave"
             android:textSize="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -92,6 +93,7 @@
             android:id="@+id/edtPassword_login"
             android:layout_width="364dp"
             android:layout_height="39dp"
+            android:inputType="textPassword"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/_10sdp"
             android:background="@drawable/edt"

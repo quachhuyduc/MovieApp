@@ -60,7 +60,7 @@ public class ImagesCastAdapter extends RecyclerView.Adapter<ImagesCastAdapter.Vi
 
             super(itemView);
 
-            recyclerView = itemView.findViewById(R.id.rcv_cast_backdrop_detail);
+       //     recyclerView = itemView.findViewById(R.id.rcv_cast_backdrop_detail);
             imageView = itemView.findViewById(R.id.img_cast_backdrop_detail);
         }
     }

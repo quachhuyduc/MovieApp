@@ -31,7 +31,7 @@ import android.widget.Toast;
 import com.example.movieapp.activity.DetailActivity;
 import com.example.movieapp.R;
 
-import com.example.movieapp.adapters.OnMovieListener;
+import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.adapters.PagerAdapter;
 import com.example.movieapp.adapters.SearchMovieAdapter;
 import com.example.movieapp.models.NowPlayingMovie;

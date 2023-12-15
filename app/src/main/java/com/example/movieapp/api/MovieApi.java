@@ -11,6 +11,10 @@ import com.example.movieapp.object.KnownForResponse;
 import com.example.movieapp.object.ListNowPlayingResponse;
 
 import com.example.movieapp.object.MovieSearchResponse;
+import com.example.movieapp.object.PopularResponse;
+import com.example.movieapp.object.ReviewsResponse;
+import com.example.movieapp.object.TopRatedResponse;
+import com.example.movieapp.object.UpComingResponse;
 import com.example.movieapp.object.VideoResponse;
 import com.google.gson.JsonObject;
 
@@ -34,10 +38,26 @@ public interface MovieApi {
     Call<ListNowPlayingResponse> getNowPlayingMovie(
             @Query("page") int page
     );
+    @GET("/3/movie/popular")
+    Call<PopularResponse> getPopularMovie(
+            @Query("page") int page
+    );
+    @GET("/3/movie/upcoming")
+    Call<UpComingResponse> getUpcomingMovie(
+            @Query("page") int page
+    );
+    @GET("/3/movie/top_rated")
+    Call<TopRatedResponse> getTopRatedMovie(
+            @Query("page") int page
+    );
     @GET("/3/movie/{movie_id}")
     Call<DetailMovieResponse> getDetailMovie(
             @Path("movie_id") int movie_id,
             @Query("api_key") String api_key
+    );
+    @GET("/3/movie/{movie_id}/reviews")
+    Call<ReviewsResponse> getReviewsMovie(
+            @Path("movie_id") int movie_id
     );
     @GET("/3/movie/{movie_id}/credits")
     Call<CastResponse> getCastMovie(

@@ -10,6 +10,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class NowPlayingMovie{
 
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    private int position;
+
+
     private boolean isWish;
 
     public boolean isWish() {

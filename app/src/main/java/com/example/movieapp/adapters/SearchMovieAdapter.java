@@ -1,38 +1,24 @@
 package com.example.movieapp.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
-import com.example.movieapp.activity.DetailActivity;
 import com.example.movieapp.api.MovieApi;
-import com.example.movieapp.api.RetrofitClient;
-import com.example.movieapp.models.Genre;
-import com.example.movieapp.models.NowPlayingMovie;
+import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.models.Result;
-import com.example.movieapp.object.DetailMovieResponse;
-import com.example.movieapp.object.GenresMovie;
 import com.example.movieapp.ui.SearchFragmentViewModel;
-import com.example.movieapp.utils.Constants;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SearchMovieAdapter extends RecyclerView.Adapter<SearchMovieAdapter.ViewHolder> {
 

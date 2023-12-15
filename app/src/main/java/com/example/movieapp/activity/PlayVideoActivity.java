@@ -1,8 +1,6 @@
 package com.example.movieapp.activity;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,21 +10,15 @@ import android.util.Log;
 import android.widget.Button;
 
 import com.example.movieapp.R;
-import com.example.movieapp.adapters.CastAdapter;
-import com.example.movieapp.adapters.OnMovieListener;
+import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.adapters.VideoAdapter;
 import com.example.movieapp.api.MovieApi;
 import com.example.movieapp.api.RetrofitClient;
 import com.example.movieapp.models.NowPlayingMovie;
 import com.example.movieapp.models.Video;
-import com.example.movieapp.object.CastResponse;
 import com.example.movieapp.object.VideoResponse;
 import com.example.movieapp.utils.Constants;
 import com.example.movieapp.utils.PlayYTView;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import java.util.List;
@@ -39,16 +31,13 @@ public class PlayVideoActivity extends AppCompatActivity {
 
 
     private PlayYTView wvDemo;
-    private Button btnForward;
-    private Button btnPlayOrPause;
-    private Button btnPrevious;
 
     private VideoAdapter videoAdapter;
 
     private List<Video> mVideos;
 
     private MovieApi movieApi;
-    private YouTubePlayerView youTubePlayerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,16 +94,6 @@ public class PlayVideoActivity extends AppCompatActivity {
         wvDemo = findViewById(R.id.wvDemo);
         wvDemo.setAutoPlay(true);
 
-        btnForward = findViewById(R.id.btnForward);
-        btnPlayOrPause = findViewById(R.id.btnPlayOrPause);
-        btnPrevious = findViewById(R.id.btnPrevious);
-
-        btnPrevious.setOnClickListener(v -> wvDemo.onPrevious());
-        btnPlayOrPause.setOnClickListener(v -> {
-            wvDemo.changeState();
-            btnPlayOrPause.setText(wvDemo.getState());
-        });
-        btnForward.setOnClickListener(v -> wvDemo.onForward());
 
         RecyclerView rcvVideos = findViewById(R.id.rcvVideos);
         rcvVideos.setHasFixedSize(true);

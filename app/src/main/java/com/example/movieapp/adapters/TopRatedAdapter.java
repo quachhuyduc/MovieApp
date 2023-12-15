@@ -25,12 +25,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder> {
-    private List<NowPlayingMovie> mMovieNow2;
+public class TopRatedAdapter extends RecyclerView.Adapter<TopRatedAdapter.ViewHolder> {
+    private List<NowPlayingMovie> mMovieTopRated;
     private OnMovieListener onMovieListener;
     private Context context;
     private DatabaseReference databaseReference, fvrtref, fvrt_listRef, favouriteref;
@@ -38,15 +37,15 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
     private List<Boolean> fvrtStatusList;  // Thêm danh sách trạng thái yêu thích
 
 
-    public MovieAdapter2(Context context, OnMovieListener listener) {
+    public TopRatedAdapter(Context context, OnMovieListener listener) {
         this.context = context;
         this.onMovieListener = listener;
         this.fvrtStatusList = new ArrayList<>();
 
     }
 
-    public void setData2(List<NowPlayingMovie> mMovieNow2) {
-        this.mMovieNow2 = mMovieNow2;
+    public void setDataTopRated(List<NowPlayingMovie> mMovieTopRated) {
+        this.mMovieTopRated = mMovieTopRated;
         notifyDataSetChanged();
         initFvrtStatusList();  // Khởi tạo danh sách trạng thái yêu thích khi có dữ liệu mới
     }
@@ -60,33 +59,33 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
 
     @NonNull
     @Override
-    public MovieAdapter2.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TopRatedAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.movie_list_item2, parent, false);
-        return new ViewHolder(view);
+        return new TopRatedAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieAdapter2.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TopRatedAdapter.ViewHolder holder, int position) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String currentUserid = user.getUid();
         fvrtref = database.getReference("favourites");
         fvrt_listRef = database.getReference("favouritesList").child(currentUserid);
         databaseReference = database.getReference("AllWatchList");
         final String postkey = databaseReference.getKey();
-        NowPlayingMovie nowPlayingMovie = mMovieNow2.get(position);
+        NowPlayingMovie nowPlayingMovie = mMovieTopRated.get(position);
 
         String name = nowPlayingMovie.getTitle();
         String releaseDate = nowPlayingMovie.getReleaseDate();
         int movieId = nowPlayingMovie.getId();
 
-        holder.tv_movieName.setText(mMovieNow2.get(position).getTitle());
-        holder.tv_originalLanguage.setText(mMovieNow2.get(position).getReleaseDate());
+        holder.tv_movieName.setText(mMovieTopRated.get(position).getTitle());
+        holder.tv_originalLanguage.setText(mMovieTopRated.get(position).getReleaseDate());
 
 
-        holder.tv_voteAverage.setText(mMovieNow2.get(position).getVoteAverage()+"");
+        holder.tv_voteAverage.setText(mMovieTopRated.get(position).getVoteAverage()+"");
 
         Glide.with(holder.itemView.getContext())
-                .load("https://image.tmdb.org/t/p/w500/" + mMovieNow2.get(position).getPosterPath())
+                .load("https://image.tmdb.org/t/p/w500/" + mMovieTopRated.get(position).getPosterPath())
                 .into((holder).imageView);
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +109,7 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
 
                 SharedPreferencesUtil.setWishListStatus(context, nowPlayingMovie.getId(), newStatus);
                 holder.img_wishListHome.setImageResource(newStatus ? R.drawable.ic_wish_selected : R.drawable.wish);
-       //         SharedPreferencesUtil.removeWishListStatus(context, nowPlayingMovie.getId());
+                //         SharedPreferencesUtil.removeWishListStatus(context, nowPlayingMovie.getId());
 
                 if (newStatus) {
                     // Nếu là trạng thái mới là yêu thích, thêm vào Firebase và danh sách yêu thích local
@@ -159,7 +158,7 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
 
     @Override
     public int getItemCount() {
-        return (mMovieNow2 != null) ? mMovieNow2.size() : 0;
+        return (mMovieTopRated != null) ? mMovieTopRated.size() : 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -205,3 +204,4 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
         }
     }
 }
+

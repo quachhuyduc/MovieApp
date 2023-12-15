@@ -1,4 +1,4 @@
-package com.example.movieapp.adapters;
+package com.example.movieapp.interfaces;
 
 import com.example.movieapp.models.NowPlayingMovie;
 import com.example.movieapp.models.Result;

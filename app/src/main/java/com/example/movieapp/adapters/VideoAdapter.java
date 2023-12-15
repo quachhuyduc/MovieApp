@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.movieapp.R;
+import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.models.Video;
-import com.example.movieapp.utils.Constants;
 
 import java.util.List;
 

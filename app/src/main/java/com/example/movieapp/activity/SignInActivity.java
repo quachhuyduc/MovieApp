@@ -12,16 +12,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
+import com.example.movieapp.utils.SharedPreferencesUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SignInActivity extends AppCompatActivity {
 
 
-    private TextView tv_SignUp;
+    private TextView tv_SignUp,nameUserSave;
     private EditText edtEmail_login,edtPassword_login;
     private Button btnLogin;
 
@@ -32,11 +35,13 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         initView();
+        nameUserSave();
     }
 
     private void initView() {
         progressDialog = new ProgressDialog(this);
         tv_SignUp = findViewById(R.id.tv_SignUp);
+        nameUserSave = findViewById(R.id.nameUserSave);
         edtEmail_login = findViewById(R.id.edtEmail_login);
         edtPassword_login = findViewById(R.id.edtPassword_login);
         btnLogin = findViewById(R.id.btnLogin);
@@ -67,6 +72,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void onClickSignIn() {
+
         String strEmail =  edtEmail_login.getText().toString().trim();
         String strPassword = edtPassword_login.getText().toString().trim();
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -91,5 +97,24 @@ public class SignInActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+    public void nameUserSave(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            String displayName = user.getDisplayName();
+            if (displayName != null) {
+                nameUserSave.setText(displayName);
+            } else {
+                // Nếu không có giá trị từ FirebaseUser, kiểm tra SharedPreferences
+                String savedDisplayName = SharedPreferencesUtil.getDisplayName(getApplicationContext());
+                if (savedDisplayName != null) {
+                    nameUserSave.setText(savedDisplayName);
+                }
+            }
+
+        }
+
+
     }
 }

@@ -1,14 +1,11 @@
 package com.example.movieapp.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,7 +25,7 @@ import android.widget.Toast;
 
 import com.example.movieapp.activity.DetailActivity;
 import com.example.movieapp.R;
-import com.example.movieapp.adapters.OnMovieListener;
+import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.adapters.SearchMovieAdapter;
 import com.example.movieapp.models.NowPlayingMovie;
 import com.example.movieapp.models.Result;
@@ -39,12 +36,10 @@ import com.example.movieapp.ui.SearchFragmentViewModelFactory;
 import com.example.movieapp.utils.Constants;
 import com.example.movieapp.utils.MessageEvent;
 import com.example.movieapp.utils.Service;
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.HashMap;
 import java.util.List;
 
 

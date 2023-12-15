@@ -16,35 +16,7 @@
             app:layout_constraintHeight_percent="0.3"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/btnPrevious"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="previous"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btnPlayOrPause"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/wvDemo" />
 
-        <Button
-            android:id="@+id/btnPlayOrPause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="play"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/wvDemo" />
-
-        <Button
-            android:id="@+id/btnForward"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="forward"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btnPlayOrPause"
-            app:layout_constraintTop_toBottomOf="@id/wvDemo" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcvVideos"

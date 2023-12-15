@@ -1,55 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:background="@color/screen"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_margin="@dimen/_10sdp"
 
     android:layout_height="wrap_content">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
+        <ImageView
+            android:id="@+id/video_image"
+            android:layout_width="@dimen/_110sdp"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/video_default" />
 
         <LinearLayout
+            android:padding="@dimen/_5sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/video_image"
-                android:layout_width="@dimen/_110sdp"
-                android:layout_height="100dp"
-                android:src="@drawable/ic_launcher_background"
-                android:scaleType="centerCrop"/>
-
-            <LinearLayout
-                android:orientation="vertical"
+            <TextView
+                android:textColor="@color/white"
+                android:id="@+id/videoName"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/videoName"
-                    android:text="Official Trailer"
-                    android:textSize="@dimen/_25sdp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-                <TextView
-                    android:id="@+id/videoSize"
-                    android:text="Size: "
-                    android:textSize="@dimen/_15sdp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"
+                android:text="Official Trailer"
+                android:textSize="@dimen/_20sdp" />
 
-                <TextView
-                    android:id="@+id/videoPublish"
-                    android:text="Publish At: "
-                    android:textSize="@dimen/_15sdp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+            <TextView
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:id="@+id/videoSize"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Size: "
+                android:textSize="@dimen/_15sdp" />
 
-            </LinearLayout>
+            <TextView
+                android:textColor="@color/white"
+                android:id="@+id/videoPublish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Publish At: "
+                android:textSize="@dimen/_15sdp" />
 
         </LinearLayout>
 
-
+    </LinearLayout>
 
 
 </LinearLayout>

@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ import com.example.movieapp.R;
 
 import com.example.movieapp.activity.SignInActivity;
 import com.example.movieapp.utils.Constants;
+import com.example.movieapp.utils.SharedPreferencesUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -40,7 +42,9 @@ import java.io.IOException;
 public class AccountFragment extends Fragment {
 
     private ImageView imgUser;
-    private TextView nameUser,emailUser,phoneUser,edt_edit_profile;
+    private TextView nameUser,emailUser;
+
+    private TextView edt_edit_profile;
     private Button btnSignOut;
 
   public AccountFragment() {
@@ -73,7 +77,7 @@ public class AccountFragment extends Fragment {
         imgUser = view.findViewById(R.id.imgUser);
         nameUser = view.findViewById(R.id.nameUser);
         emailUser = view.findViewById(R.id.emailUser);
-     //   phoneUser = view.findViewById(R.id.phoneUser);
+
         edt_edit_profile = view.findViewById(R.id.edt_edit_profile);
         btnSignOut = view.findViewById(R.id.btnSignOut);
 
@@ -90,7 +94,7 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-               fragmentTransaction.add(R.id.container,new EditProfileFragment());
+               fragmentTransaction.add(R.id.container,new EditProfileFragment(),null).addToBackStack(null);
                fragmentTransaction.commit();
             }
         });
@@ -100,26 +104,30 @@ public class AccountFragment extends Fragment {
     //  <!-- TODO: Update Name bị crash thoát ra vào lại đã update rồi  -->
     public void showUserInformation(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user == null){
-            return;
-        }
-        String name = user.getDisplayName();
         String email = user.getEmail();
-        Uri photourl = user.getPhotoUrl();
-   //     String phoneNumber = user.getPhoneNumber();
+    //    Uri photourl = user.getPhotoUrl();
+        if (user != null) {
+            String displayName = user.getDisplayName();
+            if (displayName != null) {
+                nameUser.setText(displayName);
+            } else {
+                // Nếu không có giá trị từ FirebaseUser, kiểm tra SharedPreferences
+                String savedDisplayName = SharedPreferencesUtil.getDisplayName(requireContext());
+                if (savedDisplayName != null) {
+                    nameUser.setText(savedDisplayName);
+                }
+            }
+            String imageUrl = SharedPreferencesUtil.getImageUrl(requireContext());
+            if (imageUrl != null) {
+                // Hiển thị ảnh từ đường dẫn đã lưu trữ
+                Glide.with(this).load(imageUrl).into(imgUser);
+            }
 
-
-         if(name == null){
-             nameUser.setVisibility(View.GONE);
-         }else {
-             nameUser.setVisibility(View.VISIBLE);
-             nameUser.setText(name);
-         }
-
+        }
         emailUser.setText(email);
- //       phoneUser.setText(phoneNumber);
-        Glide.with(this).load(photourl).error(R.drawable._0).into(imgUser);
+
     }
+
 
 
 }

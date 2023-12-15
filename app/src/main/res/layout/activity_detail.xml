@@ -86,7 +86,7 @@
                 android:layout_marginRight="@dimen/_5sdp"
                 android:text="Spiderman No Way Home"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_25sdp"
+                android:textSize="@dimen/_15sdp"
                 android:textStyle="bold" />
 
 
@@ -234,7 +234,7 @@
         app:layout_constraintTop_toBottomOf="@id/llMovie">
 
         <RelativeLayout
-            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -249,7 +249,7 @@
                 app:tabTextColor="@color/black" />
 
             <androidx.viewpager.widget.ViewPager
-                android:layout_marginTop="@dimen/_5sdp"
+
                 android:id="@+id/view_pager_detail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

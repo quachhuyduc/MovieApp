@@ -60,15 +60,7 @@
             android:textColor="@color/black"
             android:textStyle="bold" />
 
-        <EditText
-            android:textSize="15dp"
-            android:id="@+id/edtName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="19.5sp"
-            android:background="@drawable/edt"
-            android:hint="Name"
-            android:paddingLeft="13dp" />
+
 
         <EditText
             android:textSize="15dp"
@@ -108,7 +100,7 @@
             app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtPhoneNumber"
+                android:id="@+id/edtCheckPassword"
                 android:textSize="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

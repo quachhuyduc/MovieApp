@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
+import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.models.Cast;
 
 import java.util.List;
@@ -45,8 +46,6 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull CastAdapter.ViewHolder holder, int position) {
-
-        Cast cast = mCast.get(position);
 
         Glide.with(holder.itemView.getContext()).load("https://image.tmdb.org/t/p/w500/" + mCast.get(position).getProfilePath()).into((holder).imageView);
          holder.textView.setText(mCast.get(position).getName());

@@ -24,11 +24,11 @@ public class SignUpActivity extends AppCompatActivity {
 
     private TextView tvLogin;
 
-    private EditText edtName;
+
 
     private EditText edtEmail;
-    private EditText edtPassword;
-    private EditText edtPhoneNumber;
+    private EditText edtPassword , edtCheckPassword;
+
 
     private Button btnJoinUs;
 
@@ -44,10 +44,10 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void initView() {
         tvLogin = findViewById(R.id.tvLogin);
-        edtName = findViewById(R.id.edtName);
+
         edtEmail = findViewById(R.id.edtEmail);
         edtPassword = findViewById(R.id.edtPassword);
-        edtPhoneNumber = findViewById(R.id.edtPhoneNumber);
+        edtCheckPassword = findViewById(R.id.edtCheckPassword);
         btnJoinUs = findViewById(R.id.btnJoinUs);
 
         progressDialog = new ProgressDialog(this);
@@ -63,7 +63,7 @@ public class SignUpActivity extends AppCompatActivity {
         btnJoinUs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(edtName.getText().toString().isEmpty() ||edtEmail.getText().toString().isEmpty()||edtPassword.getText().toString().isEmpty()||edtPhoneNumber.getText().toString().isEmpty())
+                if(edtEmail.getText().toString().isEmpty()||edtPassword.getText().toString().isEmpty()||edtCheckPassword.getText().toString().isEmpty())
                 {
                     Toast.makeText(getApplicationContext(), "Please enter complete information..", Toast.LENGTH_SHORT).show();
                 }else{

@@ -19,18 +19,14 @@ import android.view.ViewGroup;
 import com.example.movieapp.activity.DetailActivity;
 import com.example.movieapp.R;
 import com.example.movieapp.adapters.MovieAdapter2;
-import com.example.movieapp.adapters.OnMovieListener;
+import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.models.NowPlayingMovie;
-import com.example.movieapp.models.Result;
 import com.example.movieapp.object.ListNowPlayingResponse;
 import com.example.movieapp.resporistories.HomeResporistory;
 import com.example.movieapp.ui.HomeFragmentViewModel;
 import com.example.movieapp.ui.HomeFragmentViewModelFactory;
 import com.example.movieapp.utils.Constants;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -41,12 +37,16 @@ public class NowPlayingFragment extends Fragment {
     private HomeFragmentViewModel homeFragmentViewModelNow;
     private MovieAdapter2 mMovieAdapterNow;
 
+    private DatabaseReference watchlistRef;
+
+
     public NowPlayingFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -71,13 +71,6 @@ public class NowPlayingFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
-
-        recyclerView.setAdapter(mMovieAdapterNow);
-
-
-
-
-
 
 
         mMovieAdapterNow = new MovieAdapter2(getActivity().getBaseContext(), new OnMovieListener() {
@@ -105,6 +98,8 @@ public class NowPlayingFragment extends Fragment {
         recyclerView.setAdapter(mMovieAdapterNow);
 
     }
+
+
 
 
 

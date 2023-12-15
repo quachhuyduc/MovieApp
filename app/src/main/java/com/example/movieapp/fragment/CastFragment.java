@@ -18,11 +18,9 @@ import android.view.ViewGroup;
 import com.example.movieapp.activity.DetailCastActivity;
 import com.example.movieapp.R;
 import com.example.movieapp.adapters.CastAdapter;
-import com.example.movieapp.adapters.OnMovieListener;
-import com.example.movieapp.api.MovieApi;
+import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.models.Cast;
 import com.example.movieapp.models.NowPlayingMovie;
-import com.example.movieapp.models.Result;
 import com.example.movieapp.object.CastResponse;
 
 import com.example.movieapp.resporistories.CastResporistory;
