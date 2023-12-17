@@ -1,44 +1,27 @@
 package com.example.movieapp.fragment;
 
-import static android.app.Activity.RESULT_OK;
-import static com.example.movieapp.activity.MainActivity.MY_REQUEST_CODE;
-import static androidx.databinding.adapters.ImageViewBindingAdapter.setImageDrawable;
-
-
+import static com.example.movieapp.utils.Constants.MY_REQUEST_CODE;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -46,12 +29,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.movieapp.R;
 import com.example.movieapp.activity.MainActivity;
-import com.example.movieapp.utils.Constants;
-import com.example.movieapp.utils.SharedPreferencesUtil;
-import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -60,14 +45,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
-import java.io.IOException;
-import java.io.File;
 import java.io.IOException;
 
 
 public class EditProfileFragment extends Fragment {
 
+    private static final String TAG = "EditProfileFragment";
     public interface IEditProfileListener {
 
         void onEditSuccess();
@@ -79,24 +64,18 @@ public class EditProfileFragment extends Fragment {
 
     private Context mContext;
     private static final int PICK_IMAGE_REQUEST = 1;
-
-
-
     private Uri imageUri;
 
     private String selectedImagePath;
     private DatabaseReference userRef;
     private StorageReference storageReference;
-
-    final private AccountFragment accountFragment = new AccountFragment();
     private ImageView imageView;
 
 
     private EditText edtFullName, edtEmail;
     private Button btnUpdateProfile;
-    private EditText edtFullName,edtEmail;
-    private Button btnUpdateProfile, btnUdapteEmail;
-
+    private Button btnUdapteEmail;
+    private LinearLayout llLoading;
 
 
     private MainActivity mainActivity;
@@ -106,6 +85,10 @@ public class EditProfileFragment extends Fragment {
     private Uri mUri;
 
     private View mView;
+
+    private FirebaseStorage firebaseStorage;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser currentUser;
 
     public void setmUri(Uri mUri) {
         this.mUri = mUri;
@@ -135,27 +118,25 @@ public class EditProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
-        return mView;
-        View view =  inflater.inflate(R.layout.fragment_edit_profile, container, false);
-
         userRef = FirebaseDatabase.getInstance().getReference("users");
-
-        // Initialize Firebase Storage reference
-        storageReference = FirebaseStorage.getInstance().getReference();
-        return  view;
-
+        return mView;
     }
 
+    private void setupFirebase() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = firebaseAuth.getCurrentUser();
+        firebaseStorage = FirebaseStorage.getInstance();
+    }
 
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initView();
         mainActivity = (MainActivity) getActivity();
         progressDialog = new ProgressDialog(getActivity());
+        initView();
+        setupFirebase();
         setUserInformation();
-        initListener();
     }
 
     private void initListener() {
@@ -181,137 +162,160 @@ public class EditProfileFragment extends Fragment {
 
     }
 
-
-
+    private void onClickUpdateEmail() {
+        showLoading();
+        String strnewEmail = edtEmail.getText().toString().trim();
+        currentUser.updateEmail(strnewEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                progressDialog.dismiss();
+                if (task.isSuccessful()) {
+                    Toast.makeText(getActivity(), "User email address updated.", Toast.LENGTH_SHORT).show();
+                    editProfileListener.onEditSuccess();
+                }
+                hideLoading();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: "+e.getMessage());
+            }
+        });
     }
 
     private void onClickUpdateProfile() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user == null){
-            return;
-        }
-        progressDialog.show();
-        String strFullName = edtFullName.getText().toString().trim();
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(strFullName)
-                .setPhotoUri(mUri)
-                .build();
-
-        user.updateProfile(profileUpdates)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        progressDialog.dismiss();
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getActivity(), "Update profile Success!!", Toast.LENGTH_SHORT).show();
-                            editProfileListener.onEditSuccess();
-                        }
-                    }
-                });
+        updateLoadToFireStore();
     }
 
     private void onClickRequestPermission() {
-   //      = (MainActivity) getActivity();
-        if(mainActivity == null){
+        //      = (MainActivity) getActivity();
+        if (mainActivity == null) {
             return;
         }
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             openGallery();
             return;
         }
-        if(getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+        if (getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             openGallery();
-        }else{
-            String [] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
+        } else {
+            String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
             getActivity().requestPermissions(permissions, MY_REQUEST_CODE);
         }
     }
-
-    private void navigateToAccountFragment() {
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.container, new AccountFragment())
-                .addToBackStack(null)
-                .commit();
-    }
-
 
     private void setUserInformation() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             edtFullName.setText(user.getDisplayName());
             edtEmail.setText(user.getEmail());
-            Uri uri = user.getPhotoUrl();
-            Glide.with(getActivity())
-                    .load(uri != null ? uri : R.drawable.ic_launcher_background)
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .into(imageView);
-
+            mUri = user.getPhotoUrl();
+            Glide.with(getActivity()).load(mUri != null ? mUri : R.drawable.ic_launcher_background).placeholder(R.drawable.ic_launcher_background).addListener(requestListener).into(imageView);
         }
     }
 
+    private final RequestListener requestListener = new RequestListener<Drawable>() {
+        @Override
+        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+            hideLoading();
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+            hideLoading();
+            return false;
+        }
+    };
+
+    private void showLoading() {
+        llLoading.setVisibility(View.VISIBLE);
+        changeStateButton(false);
+    }
+
+    private void hideLoading() {
+        llLoading.setVisibility(View.GONE);
+        changeStateButton(true);
+    }
+
+    private void changeStateButton(boolean enable) {
+        imageView.setEnabled(enable);
+        edtEmail.setEnabled(enable);
+        edtFullName.setEnabled(enable);
+        btnUdapteEmail.setEnabled(enable);
+        btnUpdateProfile.setEnabled(enable);
+    }
 
     private void initView() {
         imageView = mView.findViewById(R.id.img_avatarEdit);
         edtFullName = mView.findViewById(R.id.edt_full_name);
         edtEmail = mView.findViewById(R.id.edt_email);
+        btnUdapteEmail = mView.findViewById(R.id.btnUpdate_email);
         btnUpdateProfile = mView.findViewById(R.id.btnUpdate_profile);
-
+        llLoading = mView.findViewById(R.id.llLoading);
+        initListener();
     }
 
-    public void setBitmapImageView(Bitmap bitmap) {
-        imageView.setImageBitmap(null);
-        imageView.setImageBitmap(bitmap);
-    }
-
-    final private ActivityResultLauncher<Intent> mActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if (result.getResultCode() == RESULT_OK) {
-                Intent intent = result.getData();
-                if (intent == null) {
-                    return;
-                }
-                Uri uri = intent.getData();
-                if (uri != null){
-                    uploadImageToFirestore();
-                }
-                mUri = uri;
-                Bitmap bitmap = null;
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                imageView.setImageBitmap(null);
-                imageView.setImageBitmap(bitmap);
+    private final ActivityResultLauncher<String> pickImageResultLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), result -> {
+        if (result != null) {
+            mUri = result;
+            Bitmap bitmap;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), result);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+            Glide.with(this).load(bitmap).centerCrop().into(imageView);
         }
     });
 
-    private void uploadImageToFirestore() {
-//        StorageReference storageReference = FirebaseStorage.getInstance().getReference("profile_pictures/" + user.getUid() + ".jpg");
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openGallery();
-            } else {
-                Toast.makeText(getActivity(), "Please access the permisson", Toast.LENGTH_SHORT).show();
-            }
+    private void updateLoadToFireStore() {
+        if (mUri != null) {
+            showLoading();
+            // Create or update a reference to the image in Firebase Storage
+            StorageReference storageReference = firebaseStorage.getReference("profile_pictures" + currentUser.getUid() + ".jpg");
+            // Upload the image
+            UploadTask uploadTask = storageReference.putFile(mUri);
+            uploadTask.continueWithTask(task -> {
+                if (task.isSuccessful()) {
+                    //Get download url from firebase storage
+                    Log.d(TAG, "Url: " + task.getResult().getStorage().getDownloadUrl());
+                    return task.getResult().getStorage().getDownloadUrl();
+                }
+                editProfileListener.onEditError("Can't get download url");
+                throw task.getException();
+            }).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    //Update user profile
+                    updateUserProfile(downloadUri);
+                }
+                hideLoading();
+            }).addOnFailureListener(e -> {
+                Log.d(TAG, "onFailure: " + e.getMessage());
+                editProfileListener.onEditError(e.getMessage());
+                hideLoading();
+            });
         }
     }
 
+    private void updateUserProfile(Uri uri) {
+        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder().setPhotoUri(uri).build();
 
-    public void openGallery() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        mActivityResultLauncher.launch(Intent.createChooser(intent, "Select Picture"));
+        currentUser.updateProfile(profileChangeRequest).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(TAG, "updateUserProfile: update profile success");
+            }
+            editProfileListener.onEditSuccess();
+            hideLoading();
+        }).addOnFailureListener(e -> {
+            Log.d(TAG, "onFailure: " + e.getMessage());
+            editProfileListener.onEditError(e.getMessage());
+            hideLoading();
+        });
     }
 
-
+    private void openGallery() {
+        pickImageResultLauncher.launch("image/*");
+    }
 }

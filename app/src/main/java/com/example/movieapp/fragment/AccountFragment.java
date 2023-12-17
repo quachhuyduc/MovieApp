@@ -85,15 +85,20 @@ public class AccountFragment extends Fragment {
     private final EditProfileFragment.IEditProfileListener iEditProfileListener = new EditProfileFragment.IEditProfileListener() {
         @Override
         public void onEditSuccess() {
-            getActivity().getSupportFragmentManager().beginTransaction().remove(editProfileFragment).commit();
+            removeEditFragment();
             showUserInformation();
         }
 
         @Override
         public void onEditError(String message) {
             Log.d("TAG", "onEditError: " + message);
+            removeEditFragment();
         }
     };
+
+    private void removeEditFragment() {
+        getActivity().getSupportFragmentManager().beginTransaction().remove(editProfileFragment).commit();
+    }
 
     public void showUserInformation() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

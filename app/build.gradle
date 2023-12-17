@@ -82,10 +82,5 @@ dependencies {
     implementation 'com.github.Dhaval2404:ImagePicker:v2.1'
 
     implementation 'com.github.smarteist:autoimageslider:1.4.0'
-
-
-
-
-
-
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 }
