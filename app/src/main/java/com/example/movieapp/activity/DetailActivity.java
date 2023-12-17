@@ -1,9 +1,5 @@
 package com.example.movieapp.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,8 +8,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
 import com.example.movieapp.adapters.PagerAdapterDetail;
 import com.example.movieapp.api.MovieApi;
@@ -22,9 +21,10 @@ import com.example.movieapp.interfaces.IItemClickListener;
 import com.example.movieapp.models.Genre;
 import com.example.movieapp.models.Video;
 import com.example.movieapp.object.DetailMovieResponse;
-
 import com.example.movieapp.utils.Constants;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -153,17 +153,23 @@ public class DetailActivity extends AppCompatActivity {
         img_wishList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iClickListener.onSaveClick(detailMovieResponse);
+                updateWishList();
+
             }
         });
 
     }
 
+    private void updateWishList() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("favouritesList");
+    }
+
     private void goToPLayVideo() {
-      int movieId = getIntent().getExtras().getInt(Constants.MOVIE_ID_KEY, -1);;
-        Intent intent = new Intent( this,PlayVideoActivity.class);
+        int movieId = getIntent().getExtras().getInt(Constants.MOVIE_ID_KEY, -1);
+        ;
+        Intent intent = new Intent(this, PlayVideoActivity.class);
         Bundle bundle = new Bundle();
-       bundle.putInt(Constants.MOVIE_ID_KEY, movieId);
+        bundle.putInt(Constants.MOVIE_ID_KEY, movieId);
         intent.putExtras(bundle);
         startActivity(intent);
     }
