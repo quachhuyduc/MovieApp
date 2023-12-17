@@ -38,8 +38,11 @@ import com.example.movieapp.ui.SearchFragmentViewModelFactory;
 import com.example.movieapp.utils.Constants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,13 +67,9 @@ public class WatchListFragment extends Fragment {
 
     }
 
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -83,15 +82,8 @@ public class WatchListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         initsearch(view);
-
-
-
-
-
     }
-
 
     //  <!-- TODO: watchListFragment cant show list wishList -->
     private void initsearch(View view) {
@@ -104,7 +96,17 @@ public class WatchListFragment extends Fragment {
         String currentUserid = user.getUid();
 
         reference = database.getReference("favouritesList").child(currentUserid);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d(TAG, "onDataChange: ");
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d(TAG, "onDataChange: ");
+            }
+        });
 
         movieAdapter2 = new MovieAdapter2(getActivity().getBaseContext(), new OnMovieListener() {
             @Override

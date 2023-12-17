@@ -1,40 +1,26 @@
 package com.example.movieapp.fragment;
 
-import static android.app.Activity.RESULT_OK;
-
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
-import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
-
 import com.example.movieapp.activity.SignInActivity;
-import com.example.movieapp.utils.Constants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.io.IOException;
 
 
 public class AccountFragment extends Fragment {
@@ -45,14 +31,10 @@ public class AccountFragment extends Fragment {
 
   public AccountFragment() {
 
-    }
-
-
-
+  }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -90,23 +72,38 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-               fragmentTransaction.add(R.id.container,new EditProfileFragment());
-               fragmentTransaction.commit();
+                editProfileFragment = EditProfileFragment.newInstance();
+                editProfileFragment.setEditProfileListener(iEditProfileListener);
+                fragmentTransaction.add(R.id.container, editProfileFragment);
+                fragmentTransaction.commit();
             }
         });
 
     }
 
-    //  <!-- TODO: Update Name bị crash thoát ra vào lại đã update rồi  -->
-    public void showUserInformation(){
+    private EditProfileFragment editProfileFragment;
+    private final EditProfileFragment.IEditProfileListener iEditProfileListener = new EditProfileFragment.IEditProfileListener() {
+        @Override
+        public void onEditSuccess() {
+            getActivity().getSupportFragmentManager().beginTransaction().remove(editProfileFragment).commit();
+            showUserInformation();
+        }
+
+        @Override
+        public void onEditError(String message) {
+            Log.d("TAG", "onEditError: " + message);
+        }
+    };
+
+    public void showUserInformation() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user == null){
+        if (user == null) {
             return;
         }
         String name = user.getDisplayName();
         String email = user.getEmail();
         Uri photourl = user.getPhotoUrl();
-   //     String phoneNumber = user.getPhoneNumber();
+        //     String phoneNumber = user.getPhoneNumber();
 
 
          if(name == null){
