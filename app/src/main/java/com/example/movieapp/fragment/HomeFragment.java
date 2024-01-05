@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,38 +52,29 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class HomeFragment extends Fragment {
 
+    private RecyclerView recyclerView ;
+
     private List<NowPlayingMovie> listData;
 
-    private List<Result> listData2;
-
-    private UserInfo userInfo;
-
+    private List<NowPlayingMovie> filteredMovies;
 
     private HomeFragmentViewModel homeFragmentViewModel;
     private MovieAdapter mMovieAdapter;
 
-    private SearchMovieAdapter searchMovieAdapter;
+    private Button btn_action1,btn_animation1,btn_drama1,btn_fantasy1;
 
-    private SearchFragmentViewModel searchFragmentViewModel;
 
 
     public HomeFragment() {
 
     }
 
-    public UserInfo getUserInfo() {
-
-        return userInfo;
-    }
-
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,6 +129,7 @@ public class HomeFragment extends Fragment {
                 if (listNowPlayingResponse != null) {
                     listData = listNowPlayingResponse.getResults();
                     mMovieAdapter.setData(listData);
+                    filteredMovies = new ArrayList<>(listData);
                 }
             }
         });
@@ -145,7 +138,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void initView(View view) {
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_nowPlaying);
+        recyclerView = view.findViewById(R.id.recycler_nowPlaying);
         //   LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setHasFixedSize(true);
         //    recyclerView.setLayoutManager(layoutManager);
@@ -175,6 +168,55 @@ public class HomeFragment extends Fragment {
         });
         recyclerView.setAdapter(mMovieAdapter);
 
+        btn_action1 = view.findViewById(R.id.btn_action1);
+        btn_action1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMoviesByGenre(28);
+            }
+        });
+        btn_animation1 = view.findViewById(R.id.btn_animation1);
+        btn_animation1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMoviesByGenre(16);
+            }
+        });
+        btn_drama1 = view.findViewById(R.id.btn_drama1);
+        btn_drama1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMoviesByGenre(18);
+            }
+        });
+        btn_fantasy1 = view.findViewById(R.id.btn_fantasy1);
+        btn_fantasy1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMoviesByGenre(14);
+            }
+        });
+
+    }
+
+    private void filterMoviesByGenre(int genreId) {
+        if (listData != null) {
+            filteredMovies.clear();
+
+
+            for (NowPlayingMovie movie : listData) {
+                if (movie.getGenreIds() != null && movie.getGenreIds().contains(genreId)) {
+                    filteredMovies.add(movie);
+                }
+            }
+
+            // Cập nhật dữ liệu trong Adapter
+            mMovieAdapter.setData(filteredMovies);
+            recyclerView.setAdapter(mMovieAdapter);
+
+            // Thông báo rằng dữ liệu đã thay đổi
+            mMovieAdapter.notifyDataSetChanged();
+        }
     }
 
 
@@ -217,12 +259,18 @@ public class HomeFragment extends Fragment {
     }
 
     private void onClickGotoDetail(int positon) {
-        int movieId = listData.get(positon).getId();
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt(Constants.MOVIE_ID_KEY, movieId);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        if (filteredMovies != null && positon >= 0 && positon < filteredMovies.size()) {
+            int movieId = filteredMovies.get(positon).getId();
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt(Constants.MOVIE_ID_KEY, movieId);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        } else {
+            // Xử lý trường hợp filteredMovies không được khởi tạo hoặc vị trí không hợp lệ
+            Log.e("HomeFragment", "onClickGotoDetail: Invalid position or filteredMovies not initialized");
+            // Hiển thị thông báo hoặc thực hiện các xử lý khác tùy thuộc vào yêu cầu của bạn
+        }
     }
 
 

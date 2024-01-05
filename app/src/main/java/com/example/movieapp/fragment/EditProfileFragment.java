@@ -1,10 +1,10 @@
 package com.example.movieapp.fragment;
 
 import static com.example.movieapp.utils.Constants.MY_REQUEST_CODE;
-
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -27,6 +27,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -35,9 +36,14 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.movieapp.R;
 import com.example.movieapp.activity.MainActivity;
+import com.example.movieapp.activity.SignInActivity;
+import com.example.movieapp.activity.SignUpActivity;
+import com.example.movieapp.utils.SharedPreferencesUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -72,9 +78,10 @@ public class EditProfileFragment extends Fragment {
     private ImageView imageView;
 
 
-    private EditText edtFullName, edtEmail;
+    private EditText edtFullName, edtEmail,edtOldPassword, edtNewPassword, edtCheckPassword;
     private Button btnUpdateProfile;
     private Button btnUdapteEmail;
+    private Button btnChangePassword;
     private LinearLayout llLoading;
 
 
@@ -159,8 +166,78 @@ public class EditProfileFragment extends Fragment {
                 onClickUpdateEmail();
             }
         });
+        btnChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickChangePassword();
+            }
+        });
 
     }
+
+    private void onClickChangePassword() {
+        String oldPassword = edtOldPassword.getText().toString().trim();
+        String newPassword = edtNewPassword.getText().toString().trim();
+        String checkPassword = edtCheckPassword.getText().toString().trim();
+
+        if (oldPassword.isEmpty() || newPassword.isEmpty() || checkPassword.isEmpty()) {
+            showToast("Please fill in all fields");
+        } else if (!isNewPasswordValid(newPassword, checkPassword)) {
+            showToast("New password and confirm password do not match");
+        } else {
+            // Kiểm tra mật khẩu cũ và cập nhật mật khẩu mới
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (currentUser != null) {
+                // Tạo một đối tượng AuthCredential để xác thực mật khẩu cũ
+                AuthCredential credential = EmailAuthProvider.getCredential(currentUser.getEmail(), oldPassword);
+
+                // Xác thực mật khẩu cũ
+                currentUser.reauthenticate(credential)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    // Xác thực thành công, có thể cập nhật mật khẩu mới
+                                    updatePassword(newPassword);
+                                } else {
+                                    showToast("Incorrect old password");
+                                }
+                            }
+                        });
+            }
+        }
+    }
+    private void updatePassword(String newPassword) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            // Cập nhật mật khẩu mới
+            currentUser.updatePassword(newPassword)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                showToast("Password updated successfully");
+                                Intent intent = new Intent(getActivity(), SignInActivity.class);
+                                startActivity(intent);
+                                getActivity().finish();
+                                // Cập nhật mật khẩu thành công, có thể thực hiện các công việc khác nếu cần
+                            } else {
+                                showToast("Failed to update password");
+                            }
+                        }
+                    });
+        }
+    }
+
+    private boolean isNewPasswordValid(String newPassword, String checkPassword) {
+        return newPassword.equals(checkPassword);
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+
 
     private void onClickUpdateEmail() {
         showLoading();
@@ -185,6 +262,7 @@ public class EditProfileFragment extends Fragment {
 
     private void onClickUpdateProfile() {
         updateLoadToFireStore();
+
     }
 
     private void onClickRequestPermission() {
@@ -244,14 +322,19 @@ public class EditProfileFragment extends Fragment {
         edtFullName.setEnabled(enable);
         btnUdapteEmail.setEnabled(enable);
         btnUpdateProfile.setEnabled(enable);
+        btnChangePassword.setEnabled(enable);
     }
 
     private void initView() {
         imageView = mView.findViewById(R.id.img_avatarEdit);
         edtFullName = mView.findViewById(R.id.edt_full_name);
         edtEmail = mView.findViewById(R.id.edt_email);
+        edtOldPassword = mView.findViewById(R.id.edtOldPassword);
+        edtNewPassword = mView.findViewById(R.id.edtNewPassword);
+        edtCheckPassword = mView.findViewById(R.id.edtConfirmPassword);
         btnUdapteEmail = mView.findViewById(R.id.btnUpdate_email);
         btnUpdateProfile = mView.findViewById(R.id.btnUpdate_profile);
+        btnChangePassword = mView.findViewById(R.id.btnChangePassword);
         llLoading = mView.findViewById(R.id.llLoading);
         initListener();
     }
@@ -270,6 +353,7 @@ public class EditProfileFragment extends Fragment {
     });
 
     private void updateLoadToFireStore() {
+
         if (mUri != null) {
             showLoading();
             // Create or update a reference to the image in Firebase Storage
@@ -289,6 +373,7 @@ public class EditProfileFragment extends Fragment {
                     Uri downloadUri = task.getResult();
                     //Update user profile
                     updateUserProfile(downloadUri);
+
                 }
                 hideLoading();
             }).addOnFailureListener(e -> {
@@ -298,15 +383,47 @@ public class EditProfileFragment extends Fragment {
             });
         }
     }
+    private void updateUserName() {
+        if (isAdded()) {
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (currentUser != null) {
+                String newName = edtFullName.getText().toString();
+
+                Context context = getContext();
+                if (context != null) {
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(newName)
+                            .build();
+
+                    currentUser.updateProfile(profileUpdates)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    // Cập nhật thành công, lưu tên vào SharedPreferences
+                                    SharedPreferencesUtil.saveDisplayName(context, newName);
+
+
+                                } else {
+                                    // Xử lý khi cập nhật thất bại
+                                }
+                            });
+                }
+            }
+        }
+
+    }
 
     private void updateUserProfile(Uri uri) {
+
         UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder().setPhotoUri(uri).build();
 
         currentUser.updateProfile(profileChangeRequest).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(TAG, "updateUserProfile: update profile success");
+
             }
+            updateUserName();
             editProfileListener.onEditSuccess();
+
             hideLoading();
         }).addOnFailureListener(e -> {
             Log.d(TAG, "onFailure: " + e.getMessage());

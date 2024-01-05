@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/screen"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_margin="@dimen/_10sdp"
+
+    android:layout_height="wrap_content">
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+
+
+        <androidx.cardview.widget.CardView
+
+            app:cardCornerRadius="@dimen/_20sdp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/img_history"
+                android:src="@drawable/_0"
+                android:scaleType="centerCrop"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_150sdp"
+                />
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:padding="@dimen/_5sdp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:textColor="@color/white"
+                android:id="@+id/tv_title_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Official Trailer"
+                android:textSize="@dimen/_20sdp" />
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:id="@+id/tv_runtime_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Size: "
+                android:textSize="@dimen/_15sdp" />
+
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="246dp"
+                android:layout_height="116dp">
+
+                <TextView
+                    android:id="@+id/overview_history"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Publish At: "
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_15sdp" />
+            </androidx.core.widget.NestedScrollView>
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

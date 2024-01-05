@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
 import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.models.NowPlayingMovie;
+import com.example.movieapp.utils.FirebaseHelper;
 import com.example.movieapp.utils.SharedPreferencesUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,24 +33,29 @@ import java.util.List;
 public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder> {
     private List<NowPlayingMovie> mMovieNow2;
     private OnMovieListener onMovieListener;
-    private Context context;
-    private DatabaseReference databaseReference, fvrtref, fvrt_listRef, favouriteref;
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private List<Boolean> fvrtStatusList;  // Thêm danh sách trạng thái yêu thích
+    private static Context context;
+
+  private DatabaseReference databaseReference;
+    private DatabaseReference fvrtref;
+    private DatabaseReference fvrt_listRef;
+    private static DatabaseReference favouriteref;
+  private FirebaseDatabase database = FirebaseDatabase.getInstance();
+   private static List<Boolean> fvrtStatusList;  // Thêm danh sách trạng thái yêu thích
 
 
     public MovieAdapter2(Context context, OnMovieListener listener) {
         this.context = context;
         this.onMovieListener = listener;
-        this.fvrtStatusList = new ArrayList<>();
+     this.fvrtStatusList = new ArrayList<>();
 
     }
 
     public void setData2(List<NowPlayingMovie> mMovieNow2) {
         this.mMovieNow2 = mMovieNow2;
         notifyDataSetChanged();
-        initFvrtStatusList();  // Khởi tạo danh sách trạng thái yêu thích khi có dữ liệu mới
+   initFvrtStatusList();  // Khởi tạo danh sách trạng thái yêu thích khi có dữ liệu mới
     }
+
 
     private void initFvrtStatusList() {
         fvrtStatusList.clear();
@@ -58,12 +64,16 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
         }
     }
 
+
+
     @NonNull
     @Override
     public MovieAdapter2.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.movie_list_item2, parent, false);
         return new ViewHolder(view);
     }
+
+  //  <!-- TODO: click vào imgWishList chưa clear -->
 
     @Override
     public void onBindViewHolder(@NonNull MovieAdapter2.ViewHolder holder, int position) {
@@ -110,7 +120,7 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
 
                 SharedPreferencesUtil.setWishListStatus(context, nowPlayingMovie.getId(), newStatus);
                 holder.img_wishListHome.setImageResource(newStatus ? R.drawable.ic_wish_selected : R.drawable.wish);
-       //         SharedPreferencesUtil.removeWishListStatus(context, nowPlayingMovie.getId());
+                //         SharedPreferencesUtil.removeWishListStatus(context, nowPlayingMovie.getId());
 
                 if (newStatus) {
                     // Nếu là trạng thái mới là yêu thích, thêm vào Firebase và danh sách yêu thích local
@@ -127,7 +137,7 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
 
 
                 }
-                onMovieListener.onChangeWishList(position);
+                //        onMovieListener.onChangeWishList(position);
                 notifyDataSetChanged();
             }
         });
@@ -136,7 +146,7 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
     }
 
 
-
+    //  <!-- TODO: delete vẫn bị lỗi -->
     private void delete(String postKey, String userId, int movieId) {
         Query query = fvrt_listRef.orderByChild("id").equalTo(movieId);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -157,12 +167,14 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
         fvrtref.child(postKey).child(userId).removeValue();
     }
 
+
+
     @Override
     public int getItemCount() {
         return (mMovieNow2 != null) ? mMovieNow2.size() : 0;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         RecyclerView recyclerView;
 
         TextView tv_movieName,tv_originalLanguage,tv_voteAverage;
@@ -177,6 +189,7 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
             tv_originalLanguage = itemView.findViewById(R.id.tv_originalLanguage);
             tv_voteAverage = itemView.findViewById(R.id.tv_voteAverage);
             img_wishListHome = itemView.findViewById(R.id.img_WishlistHome);
+
         }
 
         public void favouriteChecker(String postkey, int position) {
@@ -203,5 +216,7 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
                 }
             });
         }
+
+
     }
 }

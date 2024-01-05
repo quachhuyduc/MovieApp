@@ -1,5 +1,6 @@
 package com.example.movieapp.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
 import com.example.movieapp.activity.SignInActivity;
+import com.example.movieapp.activity.WatchHistoryActivity;
+import com.example.movieapp.utils.SharedPreferencesUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -26,7 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class AccountFragment extends Fragment {
 
     private ImageView imgUser;
-    private TextView nameUser,emailUser,phoneUser,edt_edit_profile;
+    private TextView nameUser,emailUser,phoneUser,edt_edit_profile,tv_history;
     private Button btnSignOut;
 
   public AccountFragment() {
@@ -57,6 +60,7 @@ public class AccountFragment extends Fragment {
         emailUser = view.findViewById(R.id.emailUser);
      //   phoneUser = view.findViewById(R.id.phoneUser);
         edt_edit_profile = view.findViewById(R.id.edt_edit_profile);
+        tv_history = view.findViewById(R.id.tv_history);
         btnSignOut = view.findViewById(R.id.btnSignOut);
 
         btnSignOut.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +80,16 @@ public class AccountFragment extends Fragment {
                 editProfileFragment.setEditProfileListener(iEditProfileListener);
                 fragmentTransaction.add(R.id.container, editProfileFragment);
                 fragmentTransaction.commit();
+            }
+        });
+
+        tv_history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), WatchHistoryActivity.class);
+
+                // Bắt đầu WatchHistoryActivity
+                startActivity(intent);
             }
         });
 
@@ -105,18 +119,32 @@ public class AccountFragment extends Fragment {
         if (user == null) {
             return;
         }
-        String name = user.getDisplayName();
+        //     String name = user.getDisplayName();
         String email = user.getEmail();
         Uri photourl = user.getPhotoUrl();
         //     String phoneNumber = user.getPhoneNumber();
-
-
+        String displayName = user.getDisplayName();
+        if (displayName != null) {
+            nameUser.setText(displayName);
+        } else {
+            Context context = getContext();
+            // Nếu không có giá trị từ FirebaseUser, kiểm tra SharedPreferences
+            String savedDisplayName = SharedPreferencesUtil.getDisplayName(context);
+            if (savedDisplayName != null) {
+                nameUser.setText(savedDisplayName);
+            }
+        }
+/*
          if(name == null){
              nameUser.setVisibility(View.GONE);
          }else {
              nameUser.setVisibility(View.VISIBLE);
              nameUser.setText(name);
          }
+
+ */
+
+
 
         emailUser.setText(email);
  //       phoneUser.setText(phoneNumber);

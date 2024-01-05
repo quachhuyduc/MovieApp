@@ -127,7 +127,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.ViewHold
 
 
                 }
-                onMovieListener.onChangeWishList(position);
+         //       onMovieListener.onChangeWishList(position);
                 notifyDataSetChanged();
             }
         });

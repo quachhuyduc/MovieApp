@@ -13,6 +13,7 @@ import com.example.movieapp.adapters.SearchMovieAdapter;
 import com.example.movieapp.models.Genre;
 import com.example.movieapp.object.GenresMovie;
 import com.example.movieapp.object.MovieSearchResponse;
+import com.example.movieapp.object.SearchPersonResponse;
 import com.example.movieapp.resporistories.SearchResporistory;
 
 import java.util.List;
@@ -24,9 +25,8 @@ import retrofit2.Response;
 public class SearchFragmentViewModel extends AndroidViewModel {
 
     public MutableLiveData<MovieSearchResponse> movieSearch = new MutableLiveData<>();
-    public MutableLiveData<GenresMovie> genresSearch = new MutableLiveData<>();
+    public MutableLiveData<SearchPersonResponse> personSearch = new MutableLiveData<>();
 
-    private SearchMovieAdapter searchMovieAdapter;
 
     SearchResporistory searchResporistory;
 
@@ -46,6 +46,21 @@ public class SearchFragmentViewModel extends AndroidViewModel {
             @Override
             public void onFailure(Call<MovieSearchResponse> call, Throwable t) {
                 movieSearch.postValue(null);
+            }
+        });
+    }
+    public void getListPersonSearch(String query){
+        searchResporistory.getPersonSearch(query).enqueue(new Callback<SearchPersonResponse>() {
+            @Override
+            public void onResponse(Call<SearchPersonResponse> call, Response<SearchPersonResponse> response) {
+                if (response.isSuccessful()) {
+                    personSearch.postValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchPersonResponse> call, Throwable t) {
+                personSearch.postValue(null);
             }
         });
     }

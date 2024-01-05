@@ -11,6 +11,12 @@ import com.google.gson.annotations.SerializedName;
 public class NowPlayingMovie{
 
 
+    public NowPlayingMovie() {
+    }
+
+    public NowPlayingMovie(Integer id, String title, boolean b) {
+    }
+
     public int getPosition() {
         return position;
     }

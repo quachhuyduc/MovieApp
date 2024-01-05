@@ -128,7 +128,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
             <TextView
-                android:text="Theme"
+                android:id="@+id/tv_history"
+                android:text="History"
                 android:textSize="@dimen/_20sdp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

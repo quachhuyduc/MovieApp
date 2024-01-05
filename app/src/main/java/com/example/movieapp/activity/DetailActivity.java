@@ -23,6 +23,8 @@ import com.example.movieapp.models.Video;
 import com.example.movieapp.object.DetailMovieResponse;
 import com.example.movieapp.utils.Constants;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -36,15 +38,16 @@ public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = "DetailActivity";
 
-    private List<Video> listVideos;
+
 
     private ImageView img_detail, img_poster_detail,img_genres,img_wishList;
     private TextView textView_release_date, textView_runtime, textView_genre, textView_rating, title_detail;
     private MovieApi movieApi;
 
-    private DetailMovieResponse detailMovieResponse;
+    private DatabaseReference historyReference;
+    private FirebaseUser currentUser;
 
-    private IItemClickListener iClickListener;
+    private DetailMovieResponse movieResponse;
 
     private Button btnWatch;
 
@@ -57,6 +60,11 @@ public class DetailActivity extends AppCompatActivity {
         initView();
         addControl();
         GetDataFromIntent();
+
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentUser != null){
+            historyReference = FirebaseDatabase.getInstance().getReference("historyList").child(currentUser.getUid());
+        }
     }
 
     private void addControl() {
@@ -81,13 +89,15 @@ public class DetailActivity extends AppCompatActivity {
                 public void onResponse(Call<DetailMovieResponse> call, Response<DetailMovieResponse> response) {
                     if (response.isSuccessful()) {
                         if (response.code() == 200) {
-                            Glide.with(DetailActivity.this).load("https://image.tmdb.org/t/p/w500/" + response.body().getBackdropPath()).into(img_detail);
-                            Glide.with(DetailActivity.this).load("https://image.tmdb.org/t/p/w500/" + response.body().getPosterPath()).into(img_poster_detail);
-                            title_detail.setText(response.body().getTitle());
-                            textView_release_date.setText(response.body().getReleaseDate()+"");
-                            textView_runtime.setText(response.body().getRuntime()+""+" Minutes");
+                            movieResponse = response.body();
 
-                            String genres = getListGenres(response.body().getGenres());
+                            Glide.with(DetailActivity.this).load("https://image.tmdb.org/t/p/w500/" + movieResponse.getBackdropPath()).into(img_detail);
+                            Glide.with(DetailActivity.this).load("https://image.tmdb.org/t/p/w500/" + movieResponse.getPosterPath()).into(img_poster_detail);
+                            title_detail.setText(response.body().getTitle());
+                            textView_release_date.setText(movieResponse.getReleaseDate());
+                            textView_runtime.setText(movieResponse.getRuntime()+""+" Minutes");
+
+                            String genres = getListGenres(movieResponse.getGenres());
                             if(genres != null){
                                 textView_genre.setText(genres);
                                 textView_genre.setVisibility(View.VISIBLE);
@@ -97,7 +107,7 @@ public class DetailActivity extends AppCompatActivity {
                                 img_genres.setVisibility(View.GONE);
                             }
 
-                            textView_rating.setText(response.body().getVoteAverage() + "");
+                            textView_rating.setText(movieResponse.getVoteAverage() + "");
 
 
                         }
@@ -166,11 +176,37 @@ public class DetailActivity extends AppCompatActivity {
 
     private void goToPLayVideo() {
         int movieId = getIntent().getExtras().getInt(Constants.MOVIE_ID_KEY, -1);
-        ;
-        Intent intent = new Intent(this, PlayVideoActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt(Constants.MOVIE_ID_KEY, movieId);
-        intent.putExtras(bundle);
-        startActivity(intent);
+
+        if (currentUser != null && movieId != -1) {
+    //        historyReference.child(String.valueOf(movieId)).setValue(true);
+
+            // Lưu thêm thông tin về bộ phim trong Firebase
+            DatabaseReference movieReference = historyReference.child(String.valueOf(movieId));
+            movieReference.child("title").setValue(title_detail.getText().toString());
+            movieReference.child("posterPath").setValue("https://image.tmdb.org/t/p/w500/" + movieResponse.getPosterPath());
+            movieReference.child("release_date").setValue(movieResponse.getReleaseDate());
+            movieReference.child("vote_average").setValue(textView_rating.getText().toString());
+            String genres = getListGenres(movieResponse.getGenres());
+            movieReference.child("genre").setValue(genres);
+            if(genres != null){
+                textView_genre.setText(genres);
+                textView_genre.setVisibility(View.VISIBLE);
+                img_genres.setVisibility(View.VISIBLE);
+            }else{
+                textView_genre.setVisibility(View.GONE);
+                img_genres.setVisibility(View.GONE);
+            }
+
+            movieReference.child("runtime").setValue(movieResponse.getRuntime());
+            movieReference.child("overview").setValue(movieResponse.getOverview());
+            // Thêm các trường khác nếu cần
+
+            // Chuyển đến PlayVideoActivity
+            Intent intent = new Intent(this, PlayVideoActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt(Constants.MOVIE_ID_KEY, movieId);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
     }
 }

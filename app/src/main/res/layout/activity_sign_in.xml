@@ -101,13 +101,14 @@
             android:textSize="13sp" />
 
         <TextView
+            android:id="@+id/forgottenPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="260dp"
-            android:layout_marginTop="7.8dp"
-            android:textSize="15dp"
+            android:layout_marginLeft="@dimen/_180sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:textSize="@dimen/_10sdp"
             android:textColor="@color/white"
-            android:text="Change Password?" />
+            android:text="Forgotten Password?" />
 
         <Button
             android:id="@+id/btnLogin"

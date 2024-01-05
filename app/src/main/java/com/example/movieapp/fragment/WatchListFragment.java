@@ -1,54 +1,39 @@
 package com.example.movieapp.fragment;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import com.example.movieapp.R;
 import com.example.movieapp.adapters.MovieAdapter2;
 import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.models.NowPlayingMovie;
-import com.example.movieapp.utils.SharedPreferencesUtil;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class WatchListFragment extends Fragment {
 
-    private static final String TAG = "WatchListFragment";
-
     private DatabaseReference watchlistRef;
-    private List<NowPlayingMovie> listDataNow;
     private RecyclerView rcv_wishList;
-    private MovieAdapter2 movieAdapter2;
-
-
+    private FirebaseRecyclerAdapter<NowPlayingMovie, MovieAdapter2.ViewHolder> movieAdapter;
 
     public WatchListFragment() {
         // Constructor rỗng
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        listDataNow = new ArrayList<>();
-    }
+   // <!-- TODO: Item chưa hiển thị được trong watchListFragment-->
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,86 +43,56 @@ public class WatchListFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rcv_wishList.setLayoutManager(linearLayoutManager);
 
-        movieAdapter2 = new MovieAdapter2(getContext(), new OnMovieListener() {
-            @Override
-            public void onMovieClick(int positon) {
-
-            }
-
-            @Override
-            public void onCastClick(int positon) {
-
-            }
-
-            @Override
-            public void onSaveClick(NowPlayingMovie nowPlayingMovie) {
-                saveToWatchList(nowPlayingMovie);
-            }
-
-            @Override
-            public void onChangeWishList(int position) {
-
-                NowPlayingMovie selectedMovie = listDataNow.get(position);
-                selectedMovie.setWish(!selectedMovie.isWish());
-                movieAdapter2.notifyItemChanged(position);
-
-                boolean newStatus = selectedMovie.isWish();
-                SharedPreferencesUtil.setWishListStatus(requireContext(), selectedMovie.getId(), newStatus);
-            }
-
-        });
-
-
-
-
-        // Khởi tạo database reference
+        // Lấy UID của người dùng hiện tại
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            String currentUserid = user.getUid();
-            watchlistRef = FirebaseDatabase.getInstance().getReference("watchlist").child(currentUserid);
+            String userId = user.getUid();
+
+            // Khởi tạo database reference cho watchlist của người dùng
+            watchlistRef = FirebaseDatabase.getInstance().getReference("watchlist").child(userId);
 
             // Thêm ValueEventListener để lắng nghe sự thay đổi trong danh sách watchlist
-            watchlistRef.addValueEventListener(new ValueEventListener() {
+            FirebaseRecyclerOptions<NowPlayingMovie> options = new FirebaseRecyclerOptions.Builder<NowPlayingMovie>()
+                    .setQuery(watchlistRef, NowPlayingMovie.class)
+                    .build();
+
+            movieAdapter = new FirebaseRecyclerAdapter<NowPlayingMovie, MovieAdapter2.ViewHolder>(options) {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    listDataNow.clear(); // Xóa danh sách hiện tại để tránh việc trùng lặp
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        NowPlayingMovie nowPlayingMovie = dataSnapshot.getValue(NowPlayingMovie.class);
-                        if (nowPlayingMovie != null) {
-                            listDataNow.add(nowPlayingMovie);
-                        }
-                    }
-                    // Cập nhật dữ liệu mới vào adapter và thông báo adapter cập nhật RecyclerView
-                    movieAdapter2.setData2(listDataNow);
-                    movieAdapter2.notifyDataSetChanged();
+                protected void onBindViewHolder(@NonNull MovieAdapter2.ViewHolder holder, int position, @NonNull NowPlayingMovie model) {
+                    // Bind data to ViewHolder
+
+                    // Bind other data...
+
+                    // Handle item click or other actions...
                 }
 
+                @NonNull
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e(TAG, "onCancelled: DatabaseError", error.toException());
+                public MovieAdapter2.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_list_item2, parent, false);
+                    return new MovieAdapter2.ViewHolder(view);
                 }
-            });
+            };
+
+            rcv_wishList.setAdapter(movieAdapter);
         }
-        rcv_wishList.setAdapter(movieAdapter2);
 
         return view;
     }
 
-    private void saveToWatchList(NowPlayingMovie nowPlayingMovie) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // Nếu đã đăng nhập, lấy UID của người dùng
-            String userId = user.getUid();
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (movieAdapter != null) {
+            movieAdapter.startListening();
+        }
+    }
 
-            // Tạo một child node mới với khóa duy nhất
-            String movieKey = watchlistRef.push().getKey();
-
-            // Lưu thông tin của bộ phim vào child node mới
-            watchlistRef.child(movieKey).setValue(nowPlayingMovie);
-
-            Log.d(TAG, "Bộ phim đã được lưu vào watchlist");
-        } else {
-            Log.d(TAG, "Người dùng chưa đăng nhập");
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (movieAdapter != null) {
+            movieAdapter.stopListening();
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.movieapp.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,22 +15,33 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
 import com.example.movieapp.api.MovieApi;
+import com.example.movieapp.interfaces.OnGenreClickListener;
 import com.example.movieapp.interfaces.OnMovieListener;
+import com.example.movieapp.models.Genre;
 import com.example.movieapp.models.Result;
 import com.example.movieapp.ui.SearchFragmentViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchMovieAdapter extends RecyclerView.Adapter<SearchMovieAdapter.ViewHolder> {
+
+
+
 
     private List<Result> mResult;
 
     private OnMovieListener onMovieListener;
 
-    private Context context;
-    private MovieApi movieApi;
 
-    private SearchFragmentViewModel searchFragmentViewModel;
+
+    private List<Genre> genresList = new ArrayList<>();
+
+
+    private Context context;
+
+
+
     public SearchMovieAdapter(Context context, OnMovieListener listener) {
         this.context = context;
         this.onMovieListener = listener;
@@ -43,6 +55,11 @@ public class SearchMovieAdapter extends RecyclerView.Adapter<SearchMovieAdapter.
 
         this.mResult = mResult;
         notifyDataSetChanged();
+    }
+
+
+    public void setGenresList(List<Genre> genresList) {
+        this.genresList = genresList != null ? genresList : new ArrayList<>();  // Đảm bảo genresList không bao giờ là null
     }
 
 
@@ -71,6 +88,14 @@ public class SearchMovieAdapter extends RecyclerView.Adapter<SearchMovieAdapter.
 
         holder.textView_release_date.setText(mResult.get(position).getReleaseDate());
 
+        List<Integer> genreIds = mResultMovie.getGenreIds();
+        if (genreIds != null && !genreIds.isEmpty()) {
+            List<String> genreNames = getGenreNames(genreIds);
+            holder.textView_genre.setText(TextUtils.join(", ", genreNames));
+        } else {
+            holder.textView_genre.setText("");
+        }
+
 
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -91,10 +116,29 @@ public class SearchMovieAdapter extends RecyclerView.Adapter<SearchMovieAdapter.
             @Override
             public void onClick(View view) {
 
-                onMovieListener.onChangeWishList(position);
+                //        onMovieListener.onChangeWishList(position);
             }
         });
 
+    }
+    private List<String> getGenreNames(List<Integer> genreIds) {
+        List<String> genreNames = new ArrayList<>();
+        for (Integer genreId : genreIds) {
+            String name = findGenreNameById(genreId);
+            if (name != null) {
+                genreNames.add(name);
+            }
+        }
+        return genreNames;
+    }
+
+    private String findGenreNameById(int genreId) {
+        for (Genre genre : genresList) {
+            if (genre.getId() == genreId) {
+                return genre.getName();
+            }
+        }
+        return null;
     }
 
 
@@ -121,9 +165,10 @@ public class SearchMovieAdapter extends RecyclerView.Adapter<SearchMovieAdapter.
             editText = itemView.findViewById(R.id.edtSearch);
             tv_search = itemView.findViewById(R.id.tv_Search);
             textView_rating = itemView.findViewById(R.id.textView_rating_search);
-       //     textView_genre = itemView.findViewById(R.id.textView_genreSearch);
+           textView_genre = itemView.findViewById(R.id.textView_genreSearch);
             textView_release_date = itemView.findViewById(R.id.textView_release_date_search);
 
         }
+
     }
 }

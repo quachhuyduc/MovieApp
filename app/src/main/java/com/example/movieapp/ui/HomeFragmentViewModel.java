@@ -1,17 +1,23 @@
 package com.example.movieapp.ui;
 
 import android.app.Application;
+import android.content.res.Resources;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 
+import com.bumptech.glide.load.engine.Resource;
+import com.example.movieapp.models.Result;
 import com.example.movieapp.object.ListNowPlayingResponse;
 import com.example.movieapp.object.PopularResponse;
 import com.example.movieapp.object.TopRatedResponse;
 import com.example.movieapp.object.UpComingResponse;
 import com.example.movieapp.resporistories.HomeResporistory;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,14 +31,28 @@ public class HomeFragmentViewModel extends AndroidViewModel {
     public MutableLiveData<TopRatedResponse> topRated = new MutableLiveData<>();
 
 
+
+
+    // Các phương thức và khai báo khác...
+
+    private static HomeFragmentViewModel instance;
+
+
     HomeResporistory homeResporistory;
 
+    public static HomeFragmentViewModel getInstance(Application application, HomeResporistory homeResporistory) {
+        if (instance == null) {
+            instance = new HomeFragmentViewModel(application, homeResporistory);
+        }
+        return instance;
+    }
 
 
     public HomeFragmentViewModel(@NonNull Application application, HomeResporistory homeResporistory) {
         super(application);
         this.homeResporistory = homeResporistory;
     }
+
 
     public void getListNowPlaying(int page) {
         homeResporistory.getListNowPlaying(page).enqueue(new Callback<ListNowPlayingResponse>() {

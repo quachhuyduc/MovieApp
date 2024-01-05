@@ -126,7 +126,7 @@ public class TopRatedAdapter extends RecyclerView.Adapter<TopRatedAdapter.ViewHo
 
 
                 }
-                onMovieListener.onChangeWishList(position);
+        //        onMovieListener.onChangeWishList(position);
                 notifyDataSetChanged();
             }
         });

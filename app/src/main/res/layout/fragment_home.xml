@@ -36,6 +36,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
 
+
             <LinearLayout
                 android:id="@+id/llMovieS"
                 android:orientation="horizontal"
@@ -66,7 +67,63 @@
 
 
 
+
             </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_margin="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/btn_action1"
+                        android:text="Action"
+                        android:textSize="12sp"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </Button>
+                    <Button
+                        android:id="@+id/btn_animation1"
+                        android:text="Animation"
+                        android:textSize="12sp"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </Button>
+                    <Button
+                        android:id="@+id/btn_drama1"
+                        android:text="Drama"
+                        android:textSize="12sp"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </Button>
+                    <Button
+                        android:id="@+id/btn_fantasy1"
+                        android:text="Fantasy"
+                        android:textSize="12sp"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </Button>
+
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_nowPlaying"

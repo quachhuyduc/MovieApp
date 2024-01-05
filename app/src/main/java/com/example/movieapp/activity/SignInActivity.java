@@ -24,7 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class SignInActivity extends AppCompatActivity {
 
 
-    private TextView tv_SignUp,nameUserSave;
+    private TextView tv_SignUp,nameUserSave,forgottenPassword;
     private EditText edtEmail_login,edtPassword_login;
     private Button btnLogin;
 
@@ -41,10 +41,18 @@ public class SignInActivity extends AppCompatActivity {
     private void initView() {
         progressDialog = new ProgressDialog(this);
         tv_SignUp = findViewById(R.id.tv_SignUp);
+        forgottenPassword = findViewById(R.id.forgottenPassword);
         nameUserSave = findViewById(R.id.nameUserSave);
         edtEmail_login = findViewById(R.id.edtEmail_login);
         edtPassword_login = findViewById(R.id.edtPassword_login);
         btnLogin = findViewById(R.id.btnLogin);
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String userEmail = currentUser.getEmail();
+            // Điền email vào EditText
+            edtEmail_login.setText(userEmail);
+        }
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +72,17 @@ public class SignInActivity extends AppCompatActivity {
                 onClickSignUp();
             }
         });
+        forgottenPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openForgotPasswordActivity();
+            }
+        });
+    }
+
+    private void openForgotPasswordActivity() {
+        Intent intent = new Intent(SignInActivity.this, ForgottenPassword.class);
+        startActivity(intent);
     }
 
     private void onClickSignUp() {
@@ -104,12 +123,12 @@ public class SignInActivity extends AppCompatActivity {
         if (user != null) {
             String displayName = user.getDisplayName();
             if (displayName != null) {
-                nameUserSave.setText(displayName);
+                nameUserSave.setText("Welcome back " + displayName);
             } else {
                 // Nếu không có giá trị từ FirebaseUser, kiểm tra SharedPreferences
                 String savedDisplayName = SharedPreferencesUtil.getDisplayName(getApplicationContext());
                 if (savedDisplayName != null) {
-                    nameUserSave.setText(savedDisplayName);
+                    nameUserSave.setText("Welcome back "  + savedDisplayName);
                 }
             }
 

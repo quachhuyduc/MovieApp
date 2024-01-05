@@ -105,12 +105,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edt"
-                android:hint="Phone Number"
+                android:hint="Confirm Password"
                 android:inputType="numberPassword"
                 android:paddingLeft="13dp"
                 android:singleLine="true" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <EditText
+            android:textSize="15dp"
+            android:id="@+id/edtAge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15.6dp"
+            android:inputType="number"
+            android:background="@drawable/edt"
+            android:hint="Age"
+            android:paddingLeft="13dp" />
 
 
         <RadioGroup

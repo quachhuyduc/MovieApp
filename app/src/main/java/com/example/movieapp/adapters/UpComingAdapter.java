@@ -126,7 +126,7 @@ public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.ViewHo
 
 
                 }
-                onMovieListener.onChangeWishList(position);
+     //           onMovieListener.onChangeWishList(position);
                 notifyDataSetChanged();
             }
         });
