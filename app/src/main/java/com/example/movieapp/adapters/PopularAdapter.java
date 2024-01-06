@@ -97,7 +97,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.ViewHold
         });
 
         boolean wishListStatus = SharedPreferencesUtil.getWishListStatus(context, nowPlayingMovie.getId());
-        holder.img_wishListHome.setImageResource(wishListStatus ? R.drawable.ic_wish_selected : R.drawable.wish);
+        holder.img_wishListHome.setImageResource(wishListStatus ? R.drawable.ic_wish_selected : R.drawable.ic_wish);
 
 
         holder.img_wishListHome.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +109,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.ViewHold
                 fvrtStatusList.set(position, newStatus);
 
                 SharedPreferencesUtil.setWishListStatus(context, nowPlayingMovie.getId(), newStatus);
-                holder.img_wishListHome.setImageResource(newStatus ? R.drawable.ic_wish_selected : R.drawable.wish);
+                holder.img_wishListHome.setImageResource(newStatus ? R.drawable.ic_wish_selected : R.drawable.ic_wish);
                 //         SharedPreferencesUtil.removeWishListStatus(context, nowPlayingMovie.getId());
 
                 if (newStatus) {
@@ -193,7 +193,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.ViewHold
                         }
                     } else {
                         if (!fvrtStatusList.get(position)) {
-                            Glide.with(context).load(R.drawable.wish).into(img_wishListHome);
+                            Glide.with(context).load(R.drawable.ic_wish).into(img_wishListHome);
                         }
                     }
                 }

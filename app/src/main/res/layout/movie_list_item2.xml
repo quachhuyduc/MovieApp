@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="movie"
             type="com.example.movieapp.models.NowPlayingMovie" />
+
+        <import type="com.example.movieapp.utils.BindingAdapter" />
     </data>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:layout_height="wrap_content">
+        android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_view2"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_2sdp"
             android:layout_marginEnd="@dimen/_2sdp"
             android:elevation="10dp"
-            app:cardCornerRadius="@dimen/_10sdp"
-            android:layout_width="@dimen/_120sdp"
-            android:layout_height="wrap_content">
+            app:cardCornerRadius="@dimen/_10sdp">
 
 
             <LinearLayout
@@ -31,9 +35,9 @@
 
                 <ImageView
                     android:id="@+id/movie_img2"
+                    bindImageUrl="@{movie.posterPath}"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_120sdp"
-                    android:src="@drawable/ic_launcher_background"
                     android:scaleType="centerCrop" />
 
                 <LinearLayout
@@ -47,11 +51,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_35sdp"
                         android:layout_weight="2"
-                        android:text="@{movie.title}"
                         android:gravity="center"
-                        android:hint="Product name"
+                        android:text="@{movie.title}"
                         android:textColor="#121212"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_13sdp"
+                        tools:text="Movie name" />
 
                 </LinearLayout>
 
@@ -65,20 +69,19 @@
                         android:id="@+id/tv_originalLanguage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
                         android:layout_weight="2"
                         android:gravity="left|center_vertical"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:hint="$599"
                         android:textColor="#121212"
-                        android:textSize="@dimen/_13ssp" />
+                        android:textSize="@dimen/_13ssp"
+                        tools:text="releaseDate" />
 
                     <ImageView
-                        android:background="@color/orange"
                         android:id="@+id/img_WishlistHome"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
-                        android:visibility="gone"
-                        android:src="@drawable/wish" />
+                        tools:src="@drawable/ic_wish"
+                        android:visibility="visible" />
 
                 </LinearLayout>
 
@@ -99,9 +102,10 @@
                         android:id="@+id/tv_voteAverage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="4.9"
+                        android:text="@{movie.voteAverageStr}"
                         android:textColor="#121212"
-                        android:textSize="@dimen/_13ssp" />
+                        android:textSize="@dimen/_13ssp"
+                        tools:text="4.9" />
                 </LinearLayout>
             </LinearLayout>
 

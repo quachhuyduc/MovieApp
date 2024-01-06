@@ -14,12 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
-import com.example.movieapp.api.MovieApi;
-import com.example.movieapp.interfaces.OnGenreClickListener;
 import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.models.Genre;
 import com.example.movieapp.models.Result;
-import com.example.movieapp.ui.SearchFragmentViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +106,7 @@ public class SearchMovieAdapter extends RecyclerView.Adapter<SearchMovieAdapter.
         if (mResultMovie.isWish()){
             Glide.with(context).load(R.drawable.ic_wish_selected).into(holder.img_wishListSearch);
         }else {
-            Glide.with(context).load(R.drawable.wish).into(holder.img_wishListSearch);
+            Glide.with(context).load(R.drawable.ic_wish).into(holder.img_wishListSearch);
         }
 
         holder.img_wishListSearch.setOnClickListener(new View.OnClickListener() {

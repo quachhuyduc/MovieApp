@@ -105,9 +105,8 @@ public class PopularFragment extends Fragment {
 
             }
 
-
             @Override
-            public void onChangeWishList(int position) {
+            public void onChangeWishList(int position, NowPlayingMovie movie) {
 
             }
         });

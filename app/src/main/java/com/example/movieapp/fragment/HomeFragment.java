@@ -2,20 +2,6 @@ package com.example.movieapp.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -28,27 +14,29 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
-import com.example.movieapp.activity.DetailActivity;
 import com.example.movieapp.R;
-
-import com.example.movieapp.interfaces.OnMovieListener;
-import com.example.movieapp.adapters.PagerAdapter;
-import com.example.movieapp.adapters.SearchMovieAdapter;
-import com.example.movieapp.models.NowPlayingMovie;
-import com.example.movieapp.models.Result;
-import com.example.movieapp.models.UserInfo;
-import com.example.movieapp.object.ListNowPlayingResponse;
+import com.example.movieapp.activity.DetailActivity;
 import com.example.movieapp.adapters.MovieAdapter;
+import com.example.movieapp.adapters.PagerAdapter;
+import com.example.movieapp.interfaces.OnMovieListener;
+import com.example.movieapp.models.NowPlayingMovie;
 import com.example.movieapp.resporistories.HomeResporistory;
 import com.example.movieapp.ui.HomeFragmentViewModel;
 import com.example.movieapp.ui.HomeFragmentViewModelFactory;
-
-import com.example.movieapp.ui.SearchFragmentViewModel;
 import com.example.movieapp.utils.Constants;
 import com.example.movieapp.utils.MessageEvent;
 import com.google.android.material.tabs.TabLayout;
-
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -58,7 +46,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    private RecyclerView recyclerView ;
+    private RecyclerView recyclerView;
 
     private List<NowPlayingMovie> listData;
 
@@ -67,8 +55,7 @@ public class HomeFragment extends Fragment {
     private HomeFragmentViewModel homeFragmentViewModel;
     private MovieAdapter mMovieAdapter;
 
-    private Button btn_action1,btn_animation1,btn_drama1,btn_fantasy1;
-
+    private Button btn_action1, btn_animation1, btn_drama1, btn_fantasy1;
 
 
     public HomeFragment() {
@@ -122,19 +109,13 @@ public class HomeFragment extends Fragment {
 
         homeFragmentViewModel.getListNowPlaying(1);
 
-        homeFragmentViewModel.nowPlaying.observe(getViewLifecycleOwner(), new Observer<ListNowPlayingResponse>() {
+        homeFragmentViewModel.nowListLiveData.observe(getViewLifecycleOwner(), new Observer<ArrayList<NowPlayingMovie>>() {
             @Override
-            public void onChanged(ListNowPlayingResponse listNowPlayingResponse) {
-                //              Log.d("TAG", "onChanged: " + listNowPlayingResponse.getResults().get(0).getTitle());
-                if (listNowPlayingResponse != null) {
-                    listData = listNowPlayingResponse.getResults();
-                    mMovieAdapter.setData(listData);
-                    filteredMovies = new ArrayList<>(listData);
-                }
+            public void onChanged(ArrayList<NowPlayingMovie> nowPlayingMovies) {
+                mMovieAdapter.setData(nowPlayingMovies);
+                filteredMovies = new ArrayList<>(nowPlayingMovies);
             }
         });
-
-
     }
 
     private void initView(View view) {
@@ -160,9 +141,8 @@ public class HomeFragment extends Fragment {
 
             }
 
-
             @Override
-            public void onChangeWishList(int position) {
+            public void onChangeWishList(int position, NowPlayingMovie movie) {
 
             }
         });
@@ -250,8 +230,6 @@ public class HomeFragment extends Fragment {
         });
 
     }
-
-
 
 
     private void onSearchAction(String movieName) {
