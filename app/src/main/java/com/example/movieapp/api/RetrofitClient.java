@@ -1,16 +1,13 @@
 package com.example.movieapp.api;
 
-import androidx.annotation.NonNull;
-
+import com.chuckerteam.chucker.api.ChuckerInterceptor;
+import com.example.movieapp.MyApplication;
 import com.example.movieapp.utils.Constants;
-
-import java.io.IOException;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -35,7 +32,7 @@ public class RetrofitClient {
 ;
                 return chain.proceed(newRequest);
             };
-            OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(loggingInterceptor)
+            OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(loggingInterceptor).addInterceptor(new ChuckerInterceptor(MyApplication.getInstance()))
                     .build();
             Retrofit.Builder retrofitBuilder = new Retrofit.Builder().baseUrl(Constants.BASE_URL).client(okHttpClient).addConverterFactory(GsonConverterFactory.create());
             return retrofitBuilder.build();

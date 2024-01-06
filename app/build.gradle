@@ -84,4 +84,7 @@ dependencies {
     implementation 'com.github.smarteist:autoimageslider:1.4.0'
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation 'com.firebaseui:firebase-ui-database:8.0.2'
+
+    debugImplementation "com.github.chuckerteam.chucker:library:4.0.0"
+    releaseImplementation "com.github.chuckerteam.chucker:library-no-op:4.0.0"
 }
