@@ -1,5 +1,6 @@
 package com.example.movieapp.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
+import com.example.movieapp.databinding.MovieListItem2Binding;
 import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.models.NowPlayingMovie;
-import com.example.movieapp.utils.FirebaseHelper;
 import com.example.movieapp.utils.SharedPreferencesUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,7 +26,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,16 +46,14 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
     public MovieAdapter2(Context context, OnMovieListener listener) {
         this.context = context;
         this.onMovieListener = listener;
-     this.fvrtStatusList = new ArrayList<>();
-
+        fvrtStatusList = new ArrayList<>();
     }
 
     public void setData2(List<NowPlayingMovie> mMovieNow2) {
         this.mMovieNow2 = mMovieNow2;
         notifyDataSetChanged();
-   initFvrtStatusList();  // Khởi tạo danh sách trạng thái yêu thích khi có dữ liệu mới
+        initFvrtStatusList();  // Khởi tạo danh sách trạng thái yêu thích khi có dữ liệu mới
     }
-
 
     private void initFvrtStatusList() {
         fvrtStatusList.clear();
@@ -76,7 +74,7 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
   //  <!-- TODO: click vào imgWishList chưa clear -->
 
     @Override
-    public void onBindViewHolder(@NonNull MovieAdapter2.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MovieAdapter2.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String currentUserid = user.getUid();
         fvrtref = database.getReference("favourites");
@@ -134,8 +132,6 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
                 } else {
                     // Nếu là trạng thái mới không phải yêu thích, xóa khỏi Firebase và danh sách yêu thích local
                     delete(postkey, currentUserid, nowPlayingMovie.getId());
-
-
                 }
                 //        onMovieListener.onChangeWishList(position);
                 notifyDataSetChanged();
@@ -177,9 +173,21 @@ public class MovieAdapter2 extends RecyclerView.Adapter<MovieAdapter2.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         RecyclerView recyclerView;
 
-        TextView tv_movieName,tv_originalLanguage,tv_voteAverage;
+        TextView tv_movieName, tv_originalLanguage, tv_voteAverage;
         ImageView imageView, img_wishListHome;
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+        MovieListItem2Binding movieListItem2Binding;
+
+        public ViewHolder(MovieListItem2Binding binding) {
+            super(binding.getRoot());
+            movieListItem2Binding = binding;
+        }
+
+        public void bindData(NowPlayingMovie nowPlayingMovie) {
+            if (nowPlayingMovie != null) {
+                movieListItem2Binding.setMovie(nowPlayingMovie);
+            }
+        }
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -1,5 +1,6 @@
 package com.example.movieapp.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +66,7 @@ public class TopRatedAdapter extends RecyclerView.Adapter<TopRatedAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TopRatedAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TopRatedAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String currentUserid = user.getUid();
         fvrtref = database.getReference("favourites");
@@ -91,7 +92,7 @@ public class TopRatedAdapter extends RecyclerView.Adapter<TopRatedAdapter.ViewHo
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onMovieListener.onMovieClick(holder.getAdapterPosition());
+                onMovieListener.onMovieClick(holder.getAbsoluteAdapterPosition());
             }
         });
 
