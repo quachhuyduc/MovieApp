@@ -2,20 +2,6 @@ package com.example.movieapp.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -28,27 +14,31 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
-import com.example.movieapp.activity.DetailActivity;
 import com.example.movieapp.R;
-
-import com.example.movieapp.interfaces.OnMovieListener;
-import com.example.movieapp.adapters.PagerAdapter;
-import com.example.movieapp.adapters.SearchMovieAdapter;
-import com.example.movieapp.models.NowPlayingMovie;
-import com.example.movieapp.models.Result;
-import com.example.movieapp.models.UserInfo;
-import com.example.movieapp.object.ListNowPlayingResponse;
+import com.example.movieapp.activity.DetailActivity;
 import com.example.movieapp.adapters.MovieAdapter;
+import com.example.movieapp.adapters.PagerAdapter;
+import com.example.movieapp.interfaces.OnMovieListener;
+import com.example.movieapp.models.NowPlayingMovie;
+import com.example.movieapp.object.UpComingResponse;
 import com.example.movieapp.resporistories.HomeResporistory;
 import com.example.movieapp.ui.HomeFragmentViewModel;
 import com.example.movieapp.ui.HomeFragmentViewModelFactory;
-
-import com.example.movieapp.ui.SearchFragmentViewModel;
 import com.example.movieapp.utils.Constants;
+import com.example.movieapp.utils.FilterEvent;
 import com.example.movieapp.utils.MessageEvent;
 import com.google.android.material.tabs.TabLayout;
-
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -58,7 +48,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    private RecyclerView recyclerView ;
+    private RecyclerView recyclerView;
 
     private List<NowPlayingMovie> listData;
 
@@ -67,8 +57,7 @@ public class HomeFragment extends Fragment {
     private HomeFragmentViewModel homeFragmentViewModel;
     private MovieAdapter mMovieAdapter;
 
-    private Button btn_action1,btn_animation1,btn_drama1,btn_fantasy1;
-
+    private Button btn_action1, btn_animation1, btn_drama1, btn_fantasy1,btn_adventure,btn_comedy,btn_crime,btn_family,btn_horror,btn_thriller,btn_war;
 
 
     public HomeFragment() {
@@ -120,28 +109,29 @@ public class HomeFragment extends Fragment {
         HomeFragmentViewModelFactory factory = new HomeFragmentViewModelFactory(getActivity().getApplication(), homeResporistory);
         homeFragmentViewModel = new ViewModelProvider(this, factory).get(HomeFragmentViewModel.class);
 
-        homeFragmentViewModel.getListNowPlaying(1);
+        homeFragmentViewModel.getUpComingMovie(1);
 
-        homeFragmentViewModel.nowPlaying.observe(getViewLifecycleOwner(), new Observer<ListNowPlayingResponse>() {
+        homeFragmentViewModel.upComing.observe(getViewLifecycleOwner(), new Observer<UpComingResponse>() {
             @Override
-            public void onChanged(ListNowPlayingResponse listNowPlayingResponse) {
-                //              Log.d("TAG", "onChanged: " + listNowPlayingResponse.getResults().get(0).getTitle());
-                if (listNowPlayingResponse != null) {
-                    listData = listNowPlayingResponse.getResults();
+            public void onChanged(UpComingResponse upComingResponse) {
+                if (upComingResponse != null) {
+                    listData = upComingResponse.getResults();
                     mMovieAdapter.setData(listData);
                     filteredMovies = new ArrayList<>(listData);
                 }
             }
         });
 
+       //             filteredMovies = new ArrayList<>(nowPlayingMovies);
 
     }
 
+
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.recycler_nowPlaying);
-        //   LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+
         recyclerView.setHasFixedSize(true);
-        //    recyclerView.setLayoutManager(layoutManager);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
         mMovieAdapter = new MovieAdapter(getActivity().getBaseContext(), new OnMovieListener() {
@@ -160,9 +150,8 @@ public class HomeFragment extends Fragment {
 
             }
 
-
             @Override
-            public void onChangeWishList(int position) {
+            public void onChangeWishList(int position, NowPlayingMovie movie) {
 
             }
         });
@@ -173,6 +162,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 filterMoviesByGenre(28);
+                EventBus.getDefault().post(new FilterEvent(28));
             }
         });
         btn_animation1 = view.findViewById(R.id.btn_animation1);
@@ -180,6 +170,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 filterMoviesByGenre(16);
+                EventBus.getDefault().post(new FilterEvent(16));
             }
         });
         btn_drama1 = view.findViewById(R.id.btn_drama1);
@@ -196,6 +187,55 @@ public class HomeFragment extends Fragment {
                 filterMoviesByGenre(14);
             }
         });
+        btn_adventure = view.findViewById(R.id.btn_adventure);
+        btn_adventure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMoviesByGenre(12);
+            } 
+        });
+        btn_comedy = view.findViewById(R.id.btn_comedy);
+        btn_comedy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMoviesByGenre(35);
+            }
+        });
+        btn_crime = view.findViewById(R.id.btn_crime);
+        btn_crime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMoviesByGenre(80);
+            }
+        });
+        btn_family = view.findViewById(R.id.btn_family);
+        btn_family.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMoviesByGenre(14);
+            }
+        });
+        btn_horror = view.findViewById(R.id.btn_horror);
+        btn_horror.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMoviesByGenre(27);
+            }
+        });
+        btn_thriller = view.findViewById(R.id.btn_thriller);
+        btn_thriller.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMoviesByGenre(53);
+            }
+        });
+        btn_war = view.findViewById(R.id.btn_war);
+        btn_war.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMoviesByGenre(10752);
+            }
+        });
 
     }
 
@@ -207,6 +247,7 @@ public class HomeFragment extends Fragment {
             for (NowPlayingMovie movie : listData) {
                 if (movie.getGenreIds() != null && movie.getGenreIds().contains(genreId)) {
                     filteredMovies.add(movie);
+
                 }
             }
 
@@ -250,8 +291,6 @@ public class HomeFragment extends Fragment {
         });
 
     }
-
-
 
 
     private void onSearchAction(String movieName) {

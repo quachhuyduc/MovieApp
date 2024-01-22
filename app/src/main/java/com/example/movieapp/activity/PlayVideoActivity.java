@@ -119,7 +119,7 @@ public class PlayVideoActivity extends AppCompatActivity {
 
 
             @Override
-            public void onChangeWishList(int position) {
+            public void onChangeWishList(int position, NowPlayingMovie movie) {
 
             }
         });

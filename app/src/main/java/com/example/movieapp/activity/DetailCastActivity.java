@@ -66,7 +66,7 @@ public class DetailCastActivity extends AppCompatActivity {
                             Glide.with(DetailCastActivity.this).load("https://image.tmdb.org/t/p/w500/" + response.body().getProfilePath()).into(cast_img_detail);
 
                             cast_name_detail.setText(response.body().getName());
-                //            cast_character.setText(response.body().getCharacter());
+                            //            cast_character.setText(response.body().getCharacter());
                             cast_biogoraphy.setText(response.body().getBiography());
 
 
@@ -165,26 +165,25 @@ public class DetailCastActivity extends AppCompatActivity {
 
             }
 
-
             @Override
-            public void onChangeWishList(int position) {
+            public void onChangeWishList(int position, NowPlayingMovie movie) {
 
             }
         });
         recyclerView1.setAdapter(knownForAdapter);
 
-   //     cast_backdrop_detail = findViewById(R.id.cast_backdrop_detail);
+        //     cast_backdrop_detail = findViewById(R.id.cast_backdrop_detail);
         cast_img_detail = findViewById(R.id.cast_img_detail);
         cast_name_detail = findViewById(R.id.cast_name_detail);
-    //      cast_character = findViewById(R.id.cast_character);
+        //      cast_character = findViewById(R.id.cast_character);
         cast_biogoraphy = findViewById(R.id.cast_biogoraphy);
         cast_known_for_department = findViewById(R.id.cast_known_for_department);
         cast_popularity = findViewById(R.id.cast_popularity);
-   //     cast_genre = findViewById(R.id.cast_genre);
+        //     cast_genre = findViewById(R.id.cast_genre);
         cast_birth = findViewById(R.id.cast_birth);
         cast_place_of_birth = findViewById(R.id.cast_place_of_birth);
 
-   //     cast_also_known_as = findViewById(R.id.cast_also_known_as);
+        //     cast_also_known_as = findViewById(R.id.cast_also_known_as);
 
         cast_biogoraphy.setNestedScrollingEnabled(false);
 

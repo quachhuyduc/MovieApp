@@ -80,7 +80,7 @@ public class EditProfileFragment extends Fragment {
 
     private EditText edtFullName, edtEmail,edtOldPassword, edtNewPassword, edtCheckPassword;
     private Button btnUpdateProfile;
-    private Button btnUdapteEmail;
+
     private Button btnChangePassword;
     private LinearLayout llLoading;
 
@@ -160,12 +160,7 @@ public class EditProfileFragment extends Fragment {
                 onClickUpdateProfile();
             }
         });
-        btnUdapteEmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickUpdateEmail();
-            }
-        });
+
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,29 +234,10 @@ public class EditProfileFragment extends Fragment {
 
 
 
-    private void onClickUpdateEmail() {
-        showLoading();
-        String strnewEmail = edtEmail.getText().toString().trim();
-        currentUser.updateEmail(strnewEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                progressDialog.dismiss();
-                if (task.isSuccessful()) {
-                    Toast.makeText(getActivity(), "User email address updated.", Toast.LENGTH_SHORT).show();
-                    editProfileListener.onEditSuccess();
-                }
-                hideLoading();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "onFailure: "+e.getMessage());
-            }
-        });
-    }
 
     private void onClickUpdateProfile() {
         updateLoadToFireStore();
+        updateUserName();
 
     }
 
@@ -320,7 +296,7 @@ public class EditProfileFragment extends Fragment {
         imageView.setEnabled(enable);
         edtEmail.setEnabled(enable);
         edtFullName.setEnabled(enable);
-        btnUdapteEmail.setEnabled(enable);
+
         btnUpdateProfile.setEnabled(enable);
         btnChangePassword.setEnabled(enable);
     }
@@ -332,7 +308,7 @@ public class EditProfileFragment extends Fragment {
         edtOldPassword = mView.findViewById(R.id.edtOldPassword);
         edtNewPassword = mView.findViewById(R.id.edtNewPassword);
         edtCheckPassword = mView.findViewById(R.id.edtConfirmPassword);
-        btnUdapteEmail = mView.findViewById(R.id.btnUpdate_email);
+
         btnUpdateProfile = mView.findViewById(R.id.btnUpdate_profile);
         btnChangePassword = mView.findViewById(R.id.btnChangePassword);
         llLoading = mView.findViewById(R.id.llLoading);

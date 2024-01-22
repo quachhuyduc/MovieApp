@@ -24,17 +24,22 @@ import com.example.movieapp.activity.WatchHistoryActivity;
 import com.example.movieapp.utils.SharedPreferencesUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class AccountFragment extends Fragment {
 
     private ImageView imgUser;
-    private TextView nameUser,emailUser,phoneUser,edt_edit_profile,tv_history;
+    private TextView nameUser,emailUser,edt_edit_profile,tv_history,ageUser;
     private Button btnSignOut;
 
-  public AccountFragment() {
+    public AccountFragment() {
 
-  }
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +63,8 @@ public class AccountFragment extends Fragment {
         imgUser = view.findViewById(R.id.imgUser);
         nameUser = view.findViewById(R.id.nameUser);
         emailUser = view.findViewById(R.id.emailUser);
-     //   phoneUser = view.findViewById(R.id.phoneUser);
+        ageUser = view.findViewById(R.id.ageUser);
+
         edt_edit_profile = view.findViewById(R.id.edt_edit_profile);
         tv_history = view.findViewById(R.id.tv_history);
         btnSignOut = view.findViewById(R.id.btnSignOut);
@@ -100,7 +106,7 @@ public class AccountFragment extends Fragment {
         @Override
         public void onEditSuccess() {
             removeEditFragment();
-            showUserInformation();
+          showUserInformation();
         }
 
         @Override
@@ -112,44 +118,76 @@ public class AccountFragment extends Fragment {
 
     private void removeEditFragment() {
         getActivity().getSupportFragmentManager().beginTransaction().remove(editProfileFragment).commit();
+        updateUserInfoAfterEditProfile();
     }
+
+    public void updateUserInfoAfterEditProfile() {
+        showUserInformation();
+    }
+
+
 
     public void showUserInformation() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             return;
         }
-        //     String name = user.getDisplayName();
+
         String email = user.getEmail();
         Uri photourl = user.getPhotoUrl();
-        //     String phoneNumber = user.getPhoneNumber();
+
         String displayName = user.getDisplayName();
         if (displayName != null) {
-            nameUser.setText(displayName);
+            nameUser.setText("Name: " + displayName);
         } else {
             Context context = getContext();
             // Nếu không có giá trị từ FirebaseUser, kiểm tra SharedPreferences
-            String savedDisplayName = SharedPreferencesUtil.getDisplayName(context);
+            String savedDisplayName = SharedPreferencesUtil.getDisplayName(requireContext());
             if (savedDisplayName != null) {
-                nameUser.setText(savedDisplayName);
+                nameUser.setText("Name: " + savedDisplayName);
             }
         }
-/*
-         if(name == null){
-             nameUser.setVisibility(View.GONE);
-         }else {
-             nameUser.setVisibility(View.VISIBLE);
-             nameUser.setText(name);
-         }
 
- */
+        // Lấy tuổi từ Firebase Realtime Database hoặc Firestore
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUid());
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String ageString = dataSnapshot.child("age").getValue(String.class);
+
+                    if (ageString != null && !ageString.isEmpty()) {
+                        // Convert ageString to Long if needed
+                        try {
+                            Long age = Long.parseLong(ageString);
+
+                            // Display age in your UI (replace TextView with your actual view)
+
+                            ageUser.setText("Age: " + age);
+                        } catch (NumberFormatException e) {
+                            Log.e("TAG", "Failed to convert ageString to Long: " + e.getMessage());
+                        }
+                    }
+                }
+            }
 
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("TAG", "onCancelled: " + databaseError.getMessage());
+            }
+        });
 
-        emailUser.setText(email);
- //       phoneUser.setText(phoneNumber);
+        emailUser.setText("Email: " + email);
+
         Glide.with(this).load(photourl).error(R.drawable._0).into(imgUser);
     }
+
+    public void onResume() {
+        super.onResume();
+        showUserInformation();
+    }
+
 
 
 }

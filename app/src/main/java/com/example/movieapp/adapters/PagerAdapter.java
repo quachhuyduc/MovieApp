@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.example.movieapp.fragment.NowPlayingFragment;
 import com.example.movieapp.fragment.PopularFragment;
 import com.example.movieapp.fragment.TopRateFragment;
-import com.example.movieapp.fragment.UpComingFragment;
+
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
     public PagerAdapter(@NonNull FragmentManager fm) {
@@ -24,20 +24,19 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 fragment  =new NowPlayingFragment();
                 break;
             case 1:
-                fragment = new UpComingFragment();
-                break;
-            case 2:
                 fragment = new TopRateFragment();
                 break;
-            case 3:
+            case 2:
                 fragment = new PopularFragment();
+                break;
+
         }
         return fragment;
     }
 
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
     @Override
     public CharSequence getPageTitle(int position) {
@@ -47,14 +46,12 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 title = "Now Playing";
                 break;
             case 1:
-                title = "Up coming";
-                break;
-            case 2:
                 title = "Top rated";
                 break;
-            case 3:
-                title = "popular";
+            case 2:
+                title = "Popular";
                 break;
+
         }
         return title;
     }

@@ -24,9 +24,7 @@
         <activity
             android:name=".activity.ForgottenPassword"
             android:exported="false" />
-        <activity
-            android:name=".activity.EditProfileActivity"
-            android:exported="false" />
+
         <activity
             android:name=".activity.SignInActivity"
             android:exported="false" />

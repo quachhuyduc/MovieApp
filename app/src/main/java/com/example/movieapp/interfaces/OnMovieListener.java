@@ -15,7 +15,7 @@ public interface OnMovieListener {
 
 
 
-    void onChangeWishList(int position);
+    void onChangeWishList(int position, NowPlayingMovie movie);
 
 
 }

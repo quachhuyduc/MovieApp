@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -27,17 +29,22 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     private EditText edtEmail;
-    private EditText edtPassword , edtCheckPassword;
+    private EditText edtPassword , edtCheckPassword,edtAge;
 
 
     private Button btnJoinUs;
 
     private ProgressDialog progressDialog;
 
+    private FirebaseAuth auth;
+    private DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        auth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference("users");
 
         initView();
     }
@@ -49,6 +56,7 @@ public class SignUpActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtPassword);
         edtCheckPassword = findViewById(R.id.edtCheckPassword);
         btnJoinUs = findViewById(R.id.btnJoinUs);
+        edtAge = findViewById(R.id.edtAge);
 
         progressDialog = new ProgressDialog(this);
 
@@ -77,6 +85,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void onClickSignUp() {
         String strEmail = edtEmail.getText().toString().trim();
         String strPassword = edtPassword.getText().toString().trim();
+        String strAge = edtAge.getText().toString().trim();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         progressDialog.show();
         auth.createUserWithEmailAndPassword(strEmail, strPassword)
@@ -85,6 +94,11 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
+                            FirebaseUser user = auth.getCurrentUser();
+                            String userId = user.getUid();
+
+                            saveAgeToDatabase(userId,strAge);
+
                             // Sign in success, update UI with the signed-in user's information
                             Intent intent = new Intent(SignUpActivity.this,MainActivity.class);
                            startActivity(intent);
@@ -99,5 +113,10 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void saveAgeToDatabase(String userId, String age) {
+        DatabaseReference userReference = databaseReference.child(userId);
+        userReference.child("age").setValue(age);
     }
 }

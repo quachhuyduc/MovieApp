@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import com.example.movieapp.R;
 import com.example.movieapp.activity.DetailActivity;
 import com.example.movieapp.adapters.TopRatedAdapter;
-import com.example.movieapp.adapters.UpComingAdapter;
+
 import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.models.NowPlayingMovie;
 import com.example.movieapp.object.TopRatedResponse;
@@ -104,9 +104,8 @@ public class TopRateFragment extends Fragment {
 
             }
 
-
             @Override
-            public void onChangeWishList(int position) {
+            public void onChangeWishList(int position, NowPlayingMovie movie) {
 
             }
         });

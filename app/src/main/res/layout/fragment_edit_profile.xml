@@ -127,13 +127,6 @@
                 android:background="@color/orange"
                 android:text="Update Profile" />
 
-            <Button
-                android:id="@+id/btnUpdate_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:background="@color/orange"
-                android:text="Update Email" />
 
         </LinearLayout>
 

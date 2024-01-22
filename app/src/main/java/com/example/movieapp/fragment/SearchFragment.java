@@ -1,16 +1,7 @@
- package com.example.movieapp.fragment;
+package com.example.movieapp.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,15 +17,22 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.movieapp.activity.DetailActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.movieapp.R;
+import com.example.movieapp.activity.DetailActivity;
 import com.example.movieapp.activity.DetailCastActivity;
+import com.example.movieapp.adapters.SearchMovieAdapter;
 import com.example.movieapp.adapters.SearchPersonAdapter;
 import com.example.movieapp.api.MovieApi;
 import com.example.movieapp.api.RetrofitClient;
 import com.example.movieapp.interfaces.OnMovieListener;
-import com.example.movieapp.adapters.SearchMovieAdapter;
-import com.example.movieapp.models.Cast;
 import com.example.movieapp.models.Genre;
 import com.example.movieapp.models.NowPlayingMovie;
 import com.example.movieapp.models.Result;
@@ -43,7 +41,6 @@ import com.example.movieapp.object.GenresMovie;
 import com.example.movieapp.object.MovieSearchResponse;
 import com.example.movieapp.object.SearchPersonResponse;
 import com.example.movieapp.resporistories.SearchResporistory;
-import com.example.movieapp.ui.HomeFragmentViewModel;
 import com.example.movieapp.ui.SearchFragmentViewModel;
 import com.example.movieapp.ui.SearchFragmentViewModelFactory;
 import com.example.movieapp.utils.Constants;
@@ -67,20 +64,21 @@ public class SearchFragment extends Fragment {
     private String selectedSource = "movie"; // Chọn mặc định
 
     private List<Result> listData2;
+
+    private List<Result> filteredMovieSearch;
     private List<ResultPersonSearch> listDataPerson;
 
     private SearchMovieAdapter searchMovieAdapter;
     private SearchPersonAdapter searchPersonAdapter;
-;
+    ;
     private SearchFragmentViewModel searchFragmentViewModel;
     private SearchFragmentViewModel personViewModel;
 
     private MessageEvent event;
 
-    private RecyclerView recyclerView ;
+    private RecyclerView recyclerView;
 
-    private Button btn_action;
-
+    private Button btn_action,btn_animation,btn_drama,btn_fantasy;
 
 
     private MovieApi movieApi = RetrofitClient.getMovieApi();
@@ -100,8 +98,7 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         Log.d("TAG", "onCreateView: search");
         return inflater.inflate(R.layout.fragment_search, container, false);
@@ -129,6 +126,7 @@ public class SearchFragment extends Fragment {
                 if (movieSearchResponse != null) {
                     listData2 = movieSearchResponse.getResults();
                     searchMovieAdapter.setDataSearch(listData2);
+                    filteredMovieSearch = new ArrayList<>(listData2);
                 }
 
             }
@@ -181,10 +179,7 @@ public class SearchFragment extends Fragment {
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH
-                        || actionId == EditorInfo.IME_ACTION_DONE
-                        || event.getAction() == KeyEvent.ACTION_DOWN
-                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     if (editText.getText() != null) {
                         String query = editText.getText().toString();
                         if (TextUtils.isEmpty(query)) {
@@ -233,12 +228,31 @@ public class SearchFragment extends Fragment {
                 filterMoviesByGenre(28);
             }
         });
-
-
-
+        btn_animation = view.findViewById(R.id.btn_animation);
+        btn_animation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMoviesByGenre(16);
+            }
+        });
+        btn_drama = view.findViewById(R.id.btn_drama);
+        btn_drama.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMoviesByGenre(18);
+            }
+        });
+        btn_fantasy = view.findViewById(R.id.btn_fantasy);
+        btn_fantasy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterMoviesByGenre(14);
+            }
+        });
 
 
     }
+
 
     // Trong lớp SearchFragment
     private void filterMoviesByGenre(int genreId) {
@@ -263,7 +277,7 @@ public class SearchFragment extends Fragment {
 
 
     private void initRecyclerView(View view) {
-       recyclerView = view.findViewById(R.id.rcv_search);
+        recyclerView = view.findViewById(R.id.rcv_search);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
 
@@ -295,8 +309,8 @@ public class SearchFragment extends Fragment {
                     }
 
                     @Override
-                    public void onChangeWishList(int position) {
-                        // Có thể thực hiện thêm xử lý khi danh sách mong muốn thay đổi
+                    public void onChangeWishList(int position, NowPlayingMovie movie) {
+
                     }
                 });
             }
@@ -320,8 +334,8 @@ public class SearchFragment extends Fragment {
                     }
 
                     @Override
-                    public void onChangeWishList(int position) {
-                        // Có thể thực hiện thêm xử lý khi danh sách mong muốn thay đổi
+                    public void onChangeWishList(int position, NowPlayingMovie movie) {
+
                     }
                 });
             }
@@ -330,7 +344,7 @@ public class SearchFragment extends Fragment {
     }
 
 
-    private void onSearchAction(SearchFragmentViewModel viewModel,String query, String source) {
+    private void onSearchAction(SearchFragmentViewModel viewModel, String query, String source) {
         if ("movie".equals(source)) {
             viewModel.getListMovieSearch(query);
         } else if ("actor".equals(source)) {
@@ -390,13 +404,20 @@ public class SearchFragment extends Fragment {
     }
 
     private void onClickGotoDetail(int positon) {
-        int movieId = listData2.get(positon).getId();
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt(Constants.MOVIE_ID_KEY, movieId);
-        intent.putExtras(bundle);
-        startActivity(intent);
+     if(filteredMovieSearch != null && positon >= 0 && positon < filteredMovieSearch.size()){
+         int movieId = filteredMovieSearch.get(positon).getId();
+         Intent intent = new Intent(getActivity(), DetailActivity.class);
+         Bundle bundle = new Bundle();
+         bundle.putInt(Constants.MOVIE_ID_KEY, movieId);
+         intent.putExtras(bundle);
+         startActivity(intent);
+
+     }else{
+         Log.e("HomeFragment", "onClickGotoDetail: Invalid position or filteredMovies not initialized");
+     }
+
     }
+
     private void onClickGotoDetailCast(int positon) {
         if (listDataPerson != null && positon >= 0 && positon < listDataPerson.size()) {
             int personId = listDataPerson.get(positon).getId();
@@ -413,9 +434,4 @@ public class SearchFragment extends Fragment {
     }
 
 
-
-
-
-
-
-} 
+}

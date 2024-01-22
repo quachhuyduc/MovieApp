@@ -1,5 +1,6 @@
 package com.example.movieapp.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +66,7 @@ public class TopRatedAdapter extends RecyclerView.Adapter<TopRatedAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TopRatedAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TopRatedAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String currentUserid = user.getUid();
         fvrtref = database.getReference("favourites");
@@ -91,12 +92,12 @@ public class TopRatedAdapter extends RecyclerView.Adapter<TopRatedAdapter.ViewHo
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onMovieListener.onMovieClick(holder.getAdapterPosition());
+                onMovieListener.onMovieClick(holder.getAbsoluteAdapterPosition());
             }
         });
 
         boolean wishListStatus = SharedPreferencesUtil.getWishListStatus(context, nowPlayingMovie.getId());
-        holder.img_wishListHome.setImageResource(wishListStatus ? R.drawable.ic_wish_selected : R.drawable.wish);
+        holder.img_wishListHome.setImageResource(wishListStatus ? R.drawable.ic_wish_selected : R.drawable.ic_wish);
 
 
         holder.img_wishListHome.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +109,7 @@ public class TopRatedAdapter extends RecyclerView.Adapter<TopRatedAdapter.ViewHo
                 fvrtStatusList.set(position, newStatus);
 
                 SharedPreferencesUtil.setWishListStatus(context, nowPlayingMovie.getId(), newStatus);
-                holder.img_wishListHome.setImageResource(newStatus ? R.drawable.ic_wish_selected : R.drawable.wish);
+                holder.img_wishListHome.setImageResource(newStatus ? R.drawable.ic_wish_selected : R.drawable.ic_wish);
                 //         SharedPreferencesUtil.removeWishListStatus(context, nowPlayingMovie.getId());
 
                 if (newStatus) {
@@ -126,7 +127,7 @@ public class TopRatedAdapter extends RecyclerView.Adapter<TopRatedAdapter.ViewHo
 
 
                 }
-        //        onMovieListener.onChangeWishList(position);
+                //        onMovieListener.onChangeWishList(position);
                 notifyDataSetChanged();
             }
         });
@@ -192,7 +193,7 @@ public class TopRatedAdapter extends RecyclerView.Adapter<TopRatedAdapter.ViewHo
                         }
                     } else {
                         if (!fvrtStatusList.get(position)) {
-                            Glide.with(context).load(R.drawable.wish).into(img_wishListHome);
+                            Glide.with(context).load(R.drawable.ic_wish).into(img_wishListHome);
                         }
                     }
                 }

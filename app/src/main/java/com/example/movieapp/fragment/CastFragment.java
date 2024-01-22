@@ -68,7 +68,7 @@ public class CastFragment extends Fragment {
     private void initViewModel() {
         CastResporistory castResporistory = new CastResporistory();
         CastFragmentViewModelFactory factory = new CastFragmentViewModelFactory(getActivity().getApplication(),castResporistory);
-       castFragmentViewModel = new ViewModelProvider(this,factory).get(CastFragmentViewModel.class);
+        castFragmentViewModel = new ViewModelProvider(this,factory).get(CastFragmentViewModel.class);
 
 
         Intent intent = getActivity().getIntent();
@@ -80,15 +80,15 @@ public class CastFragment extends Fragment {
             getActivity().finish();
         }
 
-       castFragmentViewModel.castResponse.observe(getViewLifecycleOwner(), new Observer<CastResponse>() {
-           @Override
-           public void onChanged(CastResponse castResponse) {
-               if(castResponse != null){
-                   castData = castResponse.getCast();
-                   castAdapter.setDataCast(castData);
-               }
-           }
-       });
+        castFragmentViewModel.castResponse.observe(getViewLifecycleOwner(), new Observer<CastResponse>() {
+            @Override
+            public void onChanged(CastResponse castResponse) {
+                if(castResponse != null){
+                    castData = castResponse.getCast();
+                    castAdapter.setDataCast(castData);
+                }
+            }
+        });
     }
 
 
@@ -99,27 +99,28 @@ public class CastFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
 
-         castAdapter = new CastAdapter(getActivity().getBaseContext(), new OnMovieListener() {
-             @Override
-             public void onMovieClick(int positon) {
-                 onClickGoToDetailCast(positon);
+        castAdapter = new CastAdapter(getActivity().getBaseContext(), new OnMovieListener() {
+            @Override
+            public void onMovieClick(int positon) {
+                onClickGoToDetailCast(positon);
 
-             }
+            }
 
-             @Override
-             public void onCastClick(int positon) {
-                 onClickGoToDetailCast(positon);
-             }
+            @Override
+            public void onCastClick(int positon) {
+                onClickGoToDetailCast(positon);
+            }
 
-             @Override
-             public void onSaveClick(NowPlayingMovie nowPlayingMovie) {
+            @Override
+            public void onSaveClick(NowPlayingMovie nowPlayingMovie) {
 
-             }
+            }
 
-             @Override
-             public void onChangeWishList(int position) {
-             }
-         });
+            @Override
+            public void onChangeWishList(int position, NowPlayingMovie movie) {
+
+            }
+        });
 
         recyclerView.setAdapter(castAdapter);
 

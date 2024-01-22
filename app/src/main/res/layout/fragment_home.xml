@@ -89,6 +89,16 @@
 
                     </Button>
                     <Button
+                        android:id="@+id/btn_adventure"
+                        android:text="Adventure"
+                        android:textSize="12sp"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </Button>
+                    <Button
                         android:id="@+id/btn_animation1"
                         android:text="Animation"
                         android:textSize="12sp"
@@ -99,8 +109,39 @@
 
                     </Button>
                     <Button
+                        android:id="@+id/btn_comedy"
+                        android:text="Comedy"
+                        android:textSize="12sp"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </Button>
+                    <Button
+                        android:id="@+id/btn_crime"
+                        android:text="Crime"
+                        android:textSize="12sp"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </Button>
+
+                    <Button
                         android:id="@+id/btn_drama1"
                         android:text="Drama"
+                        android:textSize="12sp"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </Button>
+                    <Button
+                        android:id="@+id/btn_family"
+                        android:text="Family"
                         android:textSize="12sp"
                         android:padding="6dp"
                         android:layout_margin="6dp"
@@ -118,24 +159,62 @@
                         android:layout_height="wrap_content">
 
                     </Button>
+                    <Button
+                        android:id="@+id/btn_horror"
+                        android:text="Horror"
+                        android:textSize="12sp"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </Button>
+                    <Button
+                        android:id="@+id/btn_thriller"
+                        android:text="Thriller"
+                        android:textSize="12sp"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </Button>
+                    <Button
+                        android:id="@+id/btn_war"
+                        android:text="War"
+                        android:textSize="12sp"
+                        android:padding="6dp"
+                        android:layout_margin="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </Button>
 
 
                 </LinearLayout>
             </HorizontalScrollView>
 
+            <TextView
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_15sdp"
+                android:text="Up Coming Movies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_nowPlaying"
-                    android:layout_marginStart="@dimen/_5sdp"
-                    app:layout_constraintTop_toBottomOf="@id/llMovieS"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
 
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </androidx.recyclerview.widget.RecyclerView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_nowPlaying"
+                android:layout_marginStart="@dimen/_5sdp"
+                app:layout_constraintTop_toBottomOf="@id/llMovieS"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </androidx.recyclerview.widget.RecyclerView>
             <LinearLayout
                 android:id="@+id/llTypeMovie"
                 android:layout_width="match_parent"
@@ -146,15 +225,15 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                        <com.google.android.material.tabs.TabLayout
-                            android:layout_alignParentTop="true"
-                            android:id="@+id/tab_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            app:tabTextColor="@color/white"
+                    <com.google.android.material.tabs.TabLayout
+                        android:layout_alignParentTop="true"
+                        android:id="@+id/tab_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        app:tabTextColor="@color/white"
 
-                            android:textSize="@dimen/_10sdp"
-                            app:tabSelectedTextColor="@color/white"/>
+                        android:textSize="@dimen/_10sdp"
+                        app:tabSelectedTextColor="@color/white"/>
 
                     <androidx.viewpager.widget.ViewPager
                         android:layout_below="@id/tab_layout"

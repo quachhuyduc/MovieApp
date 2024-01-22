@@ -1,44 +1,14 @@
-
 package com.example.movieapp.models;
-
-import java.io.Serializable;
-import java.util.List;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
 
-public class NowPlayingMovie{
 
-
-    public NowPlayingMovie() {
-    }
-
-    public NowPlayingMovie(Integer id, String title, boolean b) {
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
+public class NowPlayingMovie {
     private int position;
-
-
-    private boolean isWish;
-
-    public boolean isWish() {
-        return isWish;
-    }
-
-    public void setWish(boolean wish) {
-        isWish = wish;
-    }
-
-
+    private boolean isWish = false;
     @SerializedName("adult")
     @Expose
     private Boolean adult;
@@ -81,6 +51,28 @@ public class NowPlayingMovie{
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;
+
+    public NowPlayingMovie() {
+    }
+
+    public NowPlayingMovie(Integer id, String title, boolean b) {
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public boolean isWish() {
+        return isWish;
+    }
+
+    public void setWish(boolean wish) {
+        isWish = wish;
+    }
 
     public Boolean getAdult() {
         return adult;
@@ -180,6 +172,9 @@ public class NowPlayingMovie{
 
     public Double getVoteAverage() {
         return voteAverage;
+    }
+    public String getVoteAverageStr() {
+        return voteAverage+"";
     }
 
     public void setVoteAverage(Double voteAverage) {

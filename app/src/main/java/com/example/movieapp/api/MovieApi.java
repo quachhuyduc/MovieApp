@@ -95,14 +95,4 @@ public interface MovieApi {
     Call<GenresMovie> getGenresMovie(
     );
 
-
-
-    /*
-    @GET("/3/movie/{movie_id}/credits")
-    Call<JsonObject> getCastMovie2(
-            @Path("movie_id") int movie_id,
-            @Query("api_key") String api_key
-    );
-
-     */
 }

@@ -14,12 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
-import com.example.movieapp.api.MovieApi;
-import com.example.movieapp.interfaces.OnGenreClickListener;
 import com.example.movieapp.interfaces.OnMovieListener;
 import com.example.movieapp.models.Genre;
 import com.example.movieapp.models.Result;
-import com.example.movieapp.ui.SearchFragmentViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +106,7 @@ public class SearchMovieAdapter extends RecyclerView.Adapter<SearchMovieAdapter.
         if (mResultMovie.isWish()){
             Glide.with(context).load(R.drawable.ic_wish_selected).into(holder.img_wishListSearch);
         }else {
-            Glide.with(context).load(R.drawable.wish).into(holder.img_wishListSearch);
+            Glide.with(context).load(R.drawable.ic_wish).into(holder.img_wishListSearch);
         }
 
         holder.img_wishListSearch.setOnClickListener(new View.OnClickListener() {
@@ -165,7 +162,7 @@ public class SearchMovieAdapter extends RecyclerView.Adapter<SearchMovieAdapter.
             editText = itemView.findViewById(R.id.edtSearch);
             tv_search = itemView.findViewById(R.id.tv_Search);
             textView_rating = itemView.findViewById(R.id.textView_rating_search);
-           textView_genre = itemView.findViewById(R.id.textView_genreSearch);
+            textView_genre = itemView.findViewById(R.id.textView_genreSearch);
             textView_release_date = itemView.findViewById(R.id.textView_release_date_search);
 
         }

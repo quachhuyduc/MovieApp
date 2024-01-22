@@ -18,7 +18,7 @@
             android:scaleType="centerCrop"
             android:layout_width="@dimen/_100sdp"
             android:layout_height="@dimen/_150sdp"
-/>
+            />
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
@@ -43,13 +43,13 @@
             <ImageView
                 android:src="@drawable/star"
                 android:scaleType="centerCrop"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"/>
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"/>
             <TextView
                 android:id="@+id/textView_rating_search"
                 android:layout_marginStart="@dimen/_5sdp"
 
-                android:textSize="@dimen/_20sdp"
+                android:textSize="@dimen/_15sdp"
                 android:text="4.9"
                 android:textColor="@color/black"
                 android:textStyle="bold"
@@ -68,13 +68,13 @@
             <ImageView
                 android:src="@drawable/calendarblank"
                 android:scaleType="centerCrop"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"/>
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"/>
             <TextView
                 android:id="@+id/textView_release_date_search"
                 android:layout_marginStart="@dimen/_5sdp"
 
-                android:textSize="@dimen/_20sdp"
+                android:textSize="@dimen/_15sdp"
                 android:text="2020"
                 android:textColor="@color/white"
                 android:textStyle="bold"
@@ -90,13 +90,13 @@
             <ImageView
                 android:src="@drawable/ticket"
                 android:scaleType="centerCrop"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"/>
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"/>
             <TextView
                 android:id="@+id/textView_genreSearch"
                 android:layout_marginStart="@dimen/_5sdp"
 
-                android:textSize="@dimen/_20sdp"
+                android:textSize="@dimen/_15sdp"
                 android:text="Action"
                 android:textColor="@color/white"
                 android:textStyle="bold"
@@ -111,10 +111,10 @@
             <ImageView
                 android:id="@+id/img_wishListSearch"
                 android:background="@color/orange"
-                android:src="@drawable/wish"
+                android:src="@drawable/ic_wish"
                 android:scaleType="centerCrop"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"/>
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"/>
 
 
         </LinearLayout>
